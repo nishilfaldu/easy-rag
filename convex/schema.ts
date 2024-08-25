@@ -64,6 +64,7 @@ export default defineSchema({
     // TODO: if there's a third service that handles this, we don't need this field
     text: v.string(),
     columns: v.array(v.string()),
+    type: v.union(v.literal("postgresql"), v.literal("mysql")),
     botId: v.id("bots"),
   }),
 
