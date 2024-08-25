@@ -1,0 +1,56 @@
+{
+    "editor.acceptSuggestionOnCommitCharacter": false,
+    "editor.acceptSuggestionOnEnter": "off",
+    "editor.formatOnSave": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active",
+    "conventionalCommits.gitmoji": false,
+    "conventionalCommits.promptFooter": false,
+    "conventionalCommits.scopes": [
+        "client",
+        "server",
+        "nginx",
+        "docker",
+        "scripts",
+        "vscode",
+        "dev-ops",
+        "src"
+    ],
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "eslint.workingDirectories": ["client", "server", "src"],
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact"
+    ],
+    "stylelint.packageManager": "yarn",
+    "stylelint.validate": [
+        "css",
+        "scss",
+        "postcss",
+        "styled-css",
+        "source.css.styled",
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact"
+    ],
+    "spellright.language": ["English (American)"],
+    "spellright.documentTypes": ["markdown", "latex", "plaintext"],
+    "[javascript][typescript][javascriptreact][typescriptreact]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "explicit"
+        }
+    },
+    "[css][scss]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.stylelint": "explicit",
+            "source.fixAll.eslint": "explicit"
+        }
+    },
+    "[yaml]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "typescript.tsdk": "node_modules/typescript/lib"
+}
