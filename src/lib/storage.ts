@@ -10,13 +10,13 @@ interface UploadImageResult {
   result?: string[];
 }
 
-export async function uploadImagesToS3(
-  images: File[],
+export async function uploadFilesToS3(
+  files: File[],
   userId: Id<"users">
 ): Promise<UploadImageResult> {
   try {
     // Step 1: Generate signed URLs and upload each image
-    const uploadPromises = images.map(async (image) => {
+    const uploadPromises = files.map(async (image) => {
       const fileType = image.type;
       const fileSize = image.size;
 
@@ -55,18 +55,18 @@ export async function uploadImagesToS3(
       return imageName;
     });
 
-    // Wait for all images to be uploaded
+    // Wait for all files to be uploaded
     const imageKeys = await Promise.all(uploadPromises);
 
     // Display success toast
-    toast.success(`${imageKeys.length} images uploaded successfully!`);
+    toast.success(`${imageKeys.length} files uploaded successfully!`);
 
     return {
       success: true,
       result: imageKeys,
     };
   } catch (error) {
-    console.error("Error uploading images:", error);
+    console.error("Error uploading files:", error);
 
     // Display error toast
     toast.error("An error occurred during image upload.");
