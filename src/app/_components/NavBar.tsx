@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Menu, User } from "lucide-react"
+import Image from "next/image"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -9,28 +10,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import Logo from "../_images/logo.png";
 
-export default function Component() {
+export default function NavBar() {
   return (
     <header className="flex h-16 items-center justify-between border-b px-4 lg:px-8">
       <div className="flex items-center gap-2">
-        <svg
+        <Image
           className=" h-6 w-6 text-primary"
-          fill="none"
-          height="24"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          width="24"
-          xmlns="http://www.w3.org/2000/svg"
+          src={Logo}
+          alt="logo"
         >
-          <path d="M12 5v14" />
-          <path d="M18 13V5" />
-          <path d="M6 13V5" />
-          <path d="M18 9H6" />
-        </svg>
+
+        </Image>
         <span className="text-lg font-semibold">Easy Rag</span>
       </div>
       <nav className="hidden lg:flex lg:items-center lg:gap-4">

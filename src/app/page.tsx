@@ -1,8 +1,10 @@
-import { SignInButton } from "@clerk/nextjs";
-import Image from "next/image";
+import NavBar from "./_components/NavBar";
 
 export default function Home() {
   return (
-    <SignInButton mode="modal">Sign In</SignInButton>
+    <>
+    <NavBar> </NavBar>
+    </>
+  
   );
 }
