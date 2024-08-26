@@ -34,13 +34,13 @@ export default function NavBar() {
         </Link>
         <Link
           className="text-sm font-medium hover:underline"
-          href="/about"
+          href="/About"
         >
           About
         </Link>
         <Link
           className="text-sm font-medium hover:underline"
-          href="/contact"
+          href="/Contact"
         >
           Contact
         </Link>
@@ -54,9 +54,12 @@ export default function NavBar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/Profile">Profile</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/Landing">Log Out</Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         <Sheet>
