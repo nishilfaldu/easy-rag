@@ -30,7 +30,10 @@ export default defineSchema({
       v.literal("google/electra-small-discriminator"),
       v.literal("albert-base-v2"),
       v.literal("t5-small"),
-      v.literal("xlm-roberta-base")
+      v.literal("xlm-roberta-base"),
+      v.literal("text-embedding-3-large"),
+      v.literal("text-embedding-3-small"),
+      v.literal("text-embedding-ada-002")
     ),
     completionModel: v.union(
       v.literal("gpt-4o"),

@@ -15,9 +15,12 @@ export const answer = internalAction({
     botId: v.id("bots"),
   },
   handler: async ({ runQuery, vectorSearch, runMutation }, { botId }) => {
-    const OPENAI_MODEL = await runQuery(internal.serve.getModel, {
-      botId,
-    });
+    const { OPENAI_MODEL, EMBEDDINGS_MODEL } = await runQuery(
+      internal.serve.getModel,
+      {
+        botId,
+      }
+    );
 
     const messages = await runQuery(internal.serve.getMessages, {
       botId,
@@ -25,7 +28,7 @@ export const answer = internalAction({
 
     const lastUserMessage = messages.at(-1)!.text;
 
-    const [embedding] = await embedTexts([lastUserMessage]);
+    const [embedding] = await embedTexts([lastUserMessage], EMBEDDINGS_MODEL);
 
     const searchResults = await vectorSearch("embeddings", "byEmbedding", {
       vector: embedding,
@@ -157,6 +160,9 @@ export const getModel = internalQuery({
     if (!bot) {
       throw new ConvexError("Bot not found when looking for a model.");
     }
-    return bot.completionModel;
+    return {
+      OPENAI_MODEL: bot.completionModel,
+      EMBEDDINGS_MODEL: bot.embeddingModel,
+    };
   },
 });
