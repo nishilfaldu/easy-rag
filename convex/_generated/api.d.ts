@@ -16,6 +16,9 @@ import type {
 } from "convex/server";
 import type * as functions from "../functions.js";
 import type * as http from "../http.js";
+import type * as ingest_embed from "../ingest/embed.js";
+import type * as messages from "../messages.js";
+import type * as serve from "../serve.js";
 import type * as users from "../users.js";
 
 /**
@@ -29,6 +32,9 @@ import type * as users from "../users.js";
 declare const fullApi: ApiFromModules<{
   functions: typeof functions;
   http: typeof http;
+  "ingest/embed": typeof ingest_embed;
+  messages: typeof messages;
+  serve: typeof serve;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

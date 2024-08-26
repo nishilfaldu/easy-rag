@@ -30,9 +30,17 @@ export default defineSchema({
       v.literal("google/electra-small-discriminator"),
       v.literal("albert-base-v2"),
       v.literal("t5-small"),
-      v.literal("xlm-roberta-base")
+      v.literal("xlm-roberta-base"),
+      v.literal("text-embedding-3-large"),
+      v.literal("text-embedding-3-small"),
+      v.literal("text-embedding-ada-002")
     ),
-    llm: v.union(v.literal("chatgpt"), v.literal("anthropic")),
+    completionModel: v.union(
+      v.literal("gpt-4o"),
+      v.literal("gpt-4o-mini"),
+      v.literal("gpt-4-turbo"),
+      v.literal("gpt-3.5-turbo")
+    ),
     progress: v.union(
       v.literal("loading"),
       v.literal("splitting"),
@@ -46,10 +54,10 @@ export default defineSchema({
 
   messages: defineTable({
     botId: v.id("bots"),
-    // Whether the message is from the AI (false if it's from the viewer/human)
+    // Whether the message is from the AI (true if it's from the viewer/human)
     isViewer: v.boolean(),
     text: v.string(),
-  }),
+  }).index("byBotId", ["botId"]),
 
   documents: defineTable({
     // The original page URL for the document if a site is being parsed or s3 url for uploaded files
