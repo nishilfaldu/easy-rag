@@ -1,10 +1,10 @@
-import NavBar from "./_components/NavBar";
+"use client";
+import Hero from "@/app/_components/Hero";
 
-export default function Home() {
+export default function Landing() {
   return (
-    <>
-    <NavBar> </NavBar>
-    </>
-  
+    <section id="hero" className="snap-start">
+    <Hero  />
+  </section>
   );
 }

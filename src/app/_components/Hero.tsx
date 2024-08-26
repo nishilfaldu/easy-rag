@@ -1,10 +1,15 @@
+"use client"
 import React from "react";
 import { useTypewriter, Cursor } from "react-simple-typewriter";
-import BackgroundCircles from "../_components/BackgroundCircles";
+import BackgroundCircles from "./BackgroundCircles";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import logo from "../_images/logo.png";
-import { SignUpButton, SignInButton } from "@clerk/nextjs";
+import { SignUpButton, SignInButton, SignIn, UserButton } from "@clerk/nextjs";
+import { useConvexAuth } from "convex/react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
 
 
 const Hero = () => {
@@ -20,6 +25,8 @@ const Hero = () => {
     delaySpeed: 2000,
     typeSpeed: 100,
   });
+
+  const { isAuthenticated, isLoading } = useConvexAuth();
 
   return (
     <div className="h-screen bg-black flex flex-col space-y-8 items-center justify-center text-center overflow-hidden">
@@ -60,12 +67,32 @@ const Hero = () => {
             </span>
           </h1>
           <div className="pt-5">
-            <button className="heroButton">
-              <SignInButton mode="modal">Sign In</SignInButton>
+          {!isAuthenticated && !isLoading && (
+                    <>
+                        <SignInButton mode="modal">
+                            <button className="heroButton">
+                                Sign In
+                            </button>
+                        </SignInButton>
+                        <SignInButton mode="modal">
+                            <button className="heroButton">Sign Up</button>
+                        </SignInButton>
+                    </>
+                )}
+
+                {isAuthenticated && !isLoading && (
+                    <>
+                        <Link href="/Home" className="heroButton">
+                            Dashboard
+                        </Link>
+                    </>
+                )}
+            {/* <button className="heroButton">
+              <SignInButton mode="modal" >Sign In</SignInButton>
             </button>
             <button className="heroButton">
-              <SignUpButton mode="modal">Sign Up</SignUpButton>
-            </button>
+                <SignUpButton mode="modal" >Sign Up</SignUpButton>
+            </button> */}
           </div>
         </div>
       </motion.div>

@@ -1,7 +1,10 @@
+"use client"
+
 import Link from "next/link"
 import { Menu, User } from "lucide-react"
 import Image from "next/image"
-
+import { SignOutButton, useClerk } from "@clerk/nextjs"
+import { UserProfile } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -13,6 +16,9 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import Logo from "../_images/logo.png";
 
 export default function NavBar() {
+
+  const { openUserProfile } = useClerk();
+
   return (
     <header className="flex h-16 items-center justify-between border-b px-4 lg:px-8">
       <div className="flex items-center gap-2">
@@ -42,7 +48,7 @@ export default function NavBar() {
           className="text-sm font-medium hover:underline"
           href="/Contact"
         >
-          Contact
+          Contact Us
         </Link>
       </nav>
       <div className="flex items-center gap-4">
@@ -54,11 +60,14 @@ export default function NavBar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <Link href="/Profile">Profile</Link>
+            <DropdownMenuItem onClick={ () => {
+              openUserProfile()
+            }
+            }>
+              Profile
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href="/Landing">Log Out</Link>
+              <SignOutButton>Sign Out</SignOutButton>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
