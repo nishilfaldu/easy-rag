@@ -4,6 +4,7 @@ import "./globals.css";
 import ConvexClientProvider from "./_components/ConvexClientProvider";
 import { cn } from "@/lib/utils";
 import { Inter as FontSans } from "next/font/google";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Easy Rag",
@@ -29,6 +30,7 @@ export default function RootLayout({
             fontSans.variable
           )}
         >
+          <Toaster position="top-center" richColors />
           {children}
         </body>
       </html>
