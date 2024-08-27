@@ -1,7 +1,7 @@
 "use server";
 
 import { WithoutSystemFields } from "convex/server";
-import { Doc } from "../../convex/_generated/dataModel";
+import { Doc, Id } from "../../convex/_generated/dataModel";
 import { getAuthToken } from "@/lib/auth";
 import { fetchMutation } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
@@ -52,6 +52,26 @@ export async function addBot(
       success: false,
       message: errorMessage,
       result: undefined,
+    };
+  }
+}
+
+export async function deleteBot(botId: Id<"bots">) {
+  const token = await getAuthToken();
+
+  try {
+    await fetchMutation(api.bots.remove, { botId }, { token });
+
+    return {
+      success: true,
+      message: "Bot deleted successfully",
+    };
+  } catch (error) {
+    console.error("Error deleting a bot:", error);
+
+    return {
+      success: false,
+      message: "Unexpected error occurred",
     };
   }
 }

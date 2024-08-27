@@ -1,4 +1,4 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./functions";
 import { getManyFrom } from "convex-helpers/server/relationships";
 import { completionModelsField, embeddingModelsField } from "./schema";
@@ -40,5 +40,35 @@ export const add = mutation({
     }
 
     return botId;
+  },
+});
+
+export const remove = mutation({
+  args: { botId: v.id("bots") },
+  handler: async ({ db, user }, { botId }) => {
+    const bot = await db.get(botId);
+
+    if (!bot) {
+      throw new ConvexError("The bot you're trying to remove doesn't exist.");
+    }
+
+    if (bot.userId !== user._id) {
+      throw new Error("You don't have permission to remove this bot");
+    }
+
+    db.delete(botId);
+  },
+});
+
+export const getBotById = query({
+  args: { botId: v.id("bots") },
+  handler: async ({ db }, { botId }) => {
+    const bot = await db.get(botId);
+
+    if (!bot) {
+      throw new ConvexError("The bot you're trying to get doesn't exist.");
+    }
+
+    return bot;
   },
 });
