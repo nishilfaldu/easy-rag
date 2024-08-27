@@ -49,7 +49,7 @@ export default function DbColumnsModal() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button type="submit" className="w-full">
+        <Button type="button" className="w-full">
           Connect Database
         </Button>
       </DialogTrigger>
