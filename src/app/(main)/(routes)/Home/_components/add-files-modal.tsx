@@ -18,13 +18,13 @@ import { truncateString } from "@/lib/utils";
 interface AddFilesModalProps {
   uploadedFiles: File[];
   setUploadedFiles: React.Dispatch<React.SetStateAction<File[]>>;
-  onSubmit: () => Promise<void>;
+  // onSubmit: () => Promise<void>;
 }
 
 export function AddFilesModal({
   uploadedFiles,
   setUploadedFiles,
-  onSubmit,
+  // onSubmit,
 }: AddFilesModalProps) {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
@@ -57,9 +57,9 @@ export function AddFilesModal({
       <DialogTrigger asChild>
         <Button
           variant={"link"}
-          className="p-0 text-black cursor-pointer underline underline-offset-4"
+          className="p-0 text-black cursor-pointer no-underline border w-full"
         >
-          here
+          Upload ({uploadedFiles.length})
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-fit">
@@ -110,14 +110,7 @@ export function AddFilesModal({
         </div>
         <DialogClose>
           <DialogFooter>
-            <Button
-              type="submit"
-              onClick={async () => {
-                await onSubmit();
-              }}
-            >
-              Save changes
-            </Button>
+            <Button type="button">Save files</Button>
           </DialogFooter>
         </DialogClose>
       </DialogContent>

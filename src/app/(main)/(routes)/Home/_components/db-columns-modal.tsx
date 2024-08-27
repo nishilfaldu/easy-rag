@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -11,37 +11,47 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Simulated database columns
 const databaseColumns = [
-  "id", "name", "email", "age", "created_at", "updated_at", "address",
-  "phone_number", "subscription_status", "last_login", 
-]
+  "id",
+  "name",
+  "email",
+  "age",
+  "created_at",
+  "updated_at",
+  "address",
+  "phone_number",
+  "subscription_status",
+  "last_login",
+];
 
-export default function Component() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [selectedColumns, setSelectedColumns] = useState<string[]>([])
+export default function DbColumnsModal() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
 
   const handleColumnToggle = (column: string) => {
-    setSelectedColumns(prev =>
+    setSelectedColumns((prev) =>
       prev.includes(column)
-        ? prev.filter(col => col !== column)
+        ? prev.filter((col) => col !== column)
         : [...prev, column]
-    )
-  }
+    );
+  };
 
   const handleTrainModel = () => {
-    console.log("Training model with columns:", selectedColumns)
-    setIsOpen(false)
+    console.log("Training model with columns:", selectedColumns);
+    setIsOpen(false);
     // Here you would typically send the selectedColumns to your backend
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button type='submit' className='w-full'>Connect Database</Button>
+        <Button type="submit" className="w-full">
+          Connect Database
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
@@ -52,7 +62,8 @@ export default function Component() {
         </DialogHeader>
         <div className="py-4">
           <h4 className="text-sm font-medium mb-3 text-muted-foreground">
-            Selected columns: {selectedColumns.length} / {databaseColumns.length}
+            Selected columns: {selectedColumns.length} /{" "}
+            {databaseColumns.length}
           </h4>
           <ScrollArea className="h-[400px] w-full rounded-md border bg-muted/40 p-4">
             <div className="space-y-4">
@@ -76,8 +87,8 @@ export default function Component() {
           </ScrollArea>
         </div>
         <DialogFooter className="flex justify-center sm:justify-center">
-          <Button 
-            onClick={handleTrainModel} 
+          <Button
+            onClick={handleTrainModel}
             disabled={selectedColumns.length === 0}
             className="w-full sm:w-auto"
           >
@@ -86,5 +97,5 @@ export default function Component() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

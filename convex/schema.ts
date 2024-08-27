@@ -1,6 +1,29 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
+export const embeddingModelsField = v.union(
+  v.literal("bert-base-uncased"),
+  v.literal("distilbert-base-uncased"),
+  v.literal("roberta-base"),
+  v.literal("microsoft/MiniLM-L12-H384-uncased"),
+  v.literal("distilroberta-base"),
+  v.literal("gpt2"),
+  v.literal("google/electra-small-discriminator"),
+  v.literal("albert-base-v2"),
+  v.literal("t5-small"),
+  v.literal("xlm-roberta-base"),
+  v.literal("text-embedding-3-large"),
+  v.literal("text-embedding-3-small"),
+  v.literal("text-embedding-ada-002")
+);
+
+export const completionModelsField = v.union(
+  v.literal("gpt-4o"),
+  v.literal("gpt-4o-mini"),
+  v.literal("gpt-4-turbo"),
+  v.literal("gpt-3.5-turbo")
+);
+
 export default defineSchema({
   users: defineTable({
     clerkId: v.string(),
@@ -17,30 +40,11 @@ export default defineSchema({
   // bot
   bots: defineTable({
     name: v.string(),
-    description: v.string(),
-    avatar: v.string(),
-    greeting: v.string(),
-    embeddingModel: v.union(
-      v.literal("bert-base-uncased"),
-      v.literal("distilbert-base-uncased"),
-      v.literal("roberta-base"),
-      v.literal("microsoft/MiniLM-L12-H384-uncased"),
-      v.literal("distilroberta-base"),
-      v.literal("gpt2"),
-      v.literal("google/electra-small-discriminator"),
-      v.literal("albert-base-v2"),
-      v.literal("t5-small"),
-      v.literal("xlm-roberta-base"),
-      v.literal("text-embedding-3-large"),
-      v.literal("text-embedding-3-small"),
-      v.literal("text-embedding-ada-002")
-    ),
-    completionModel: v.union(
-      v.literal("gpt-4o"),
-      v.literal("gpt-4o-mini"),
-      v.literal("gpt-4-turbo"),
-      v.literal("gpt-3.5-turbo")
-    ),
+    // description: v.string(),
+    // avatar: v.string(),
+    // greeting: v.string(),
+    embeddingModel: embeddingModelsField,
+    completionModel: completionModelsField,
     progress: v.union(
       v.literal("loading"),
       v.literal("splitting"),
@@ -48,9 +52,9 @@ export default defineSchema({
       v.literal("deployed"),
       v.literal("error")
     ),
-    // relation
+
     userId: v.id("users"),
-  }),
+  }).index("byUserId", ["userId"]),
 
   messages: defineTable({
     botId: v.id("bots"),

@@ -14,6 +14,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as bots from "../bots.js";
 import type * as functions from "../functions.js";
 import type * as http from "../http.js";
 import type * as ingest_embed from "../ingest/embed.js";
@@ -30,6 +31,7 @@ import type * as users from "../users.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  bots: typeof bots;
   functions: typeof functions;
   http: typeof http;
   "ingest/embed": typeof ingest_embed;
