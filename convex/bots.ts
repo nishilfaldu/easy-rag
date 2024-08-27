@@ -72,3 +72,40 @@ export const getBotById = query({
     return bot;
   },
 });
+
+export const addWithDb = mutation({
+  args: {
+    name: v.string(),
+    embeddingModel: embeddingModelsField,
+    completionModel: completionModelsField,
+    dbUrl: v.string(),
+    dbType: v.union(v.literal("postgresql"), v.literal("mysql")),
+    tables: v.array(
+      v.object({
+        tableName: v.string(),
+        columns: v.array(v.string()),
+      })
+    ),
+  },
+  handler: async (
+    { db, user },
+    { name, embeddingModel, completionModel, dbType, dbUrl, tables }
+  ) => {
+    const botId = await db.insert("bots", {
+      name,
+      embeddingModel,
+      completionModel,
+      userId: user._id,
+      progress: "loading",
+    });
+
+    await db.insert("database", {
+      botId: botId,
+      tables,
+      type: dbType,
+      url: dbUrl,
+    });
+
+    return botId;
+  },
+});

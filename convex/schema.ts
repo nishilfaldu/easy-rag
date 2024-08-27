@@ -73,9 +73,14 @@ export default defineSchema({
 
   database: defineTable({
     url: v.string(),
+    tables: v.array(
+      v.object({
+        tableName: v.string(),
+        columns: v.array(v.string()),
+      })
+    ),
     // TODO: if there's a third service that handles this, we don't need this field
-    text: v.string(),
-    columns: v.array(v.string()),
+    // text: v.string(),
     type: v.union(v.literal("postgresql"), v.literal("mysql")),
     botId: v.id("bots"),
   }),
