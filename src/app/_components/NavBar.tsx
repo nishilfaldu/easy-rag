@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import Logo from "../_images/logo.png";
+import Logo from "../../../public/_images/logo.png";
 
 export default function NavBar() {
 
@@ -23,7 +23,7 @@ export default function NavBar() {
     <header className="flex h-16 items-center justify-between border-b px-4 lg:px-8">
       <div className="flex items-center gap-2">
         <Image
-          className=" h-6 w-6 text-primary"
+          className="relative rounded-full h-10 w-10 mx-auto object-cover z-20 border-4"
           src={Logo}
           alt="logo"
         >
@@ -34,7 +34,7 @@ export default function NavBar() {
       <nav className="hidden lg:flex lg:items-center lg:gap-4">
         <Link
           className="text-sm font-medium hover:underline"
-          href="/"
+          href="/Home"
         >
           Home
         </Link>

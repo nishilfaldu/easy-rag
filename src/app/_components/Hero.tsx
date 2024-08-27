@@ -4,7 +4,7 @@ import { useTypewriter, Cursor } from "react-simple-typewriter";
 import BackgroundCircles from "./BackgroundCircles";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import logo from "../_images/logo.png";
+import logo from "../../../public/_images/logo.png";
 import { SignUpButton, SignInButton, SignIn, UserButton } from "@clerk/nextjs";
 import { useConvexAuth } from "convex/react";
 import { Button } from "@/components/ui/button";
