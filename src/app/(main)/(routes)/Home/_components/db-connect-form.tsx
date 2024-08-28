@@ -25,7 +25,7 @@ import DatabaseReview from "./db-columns-modal";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { useState } from "react";
 import { toast } from "sonner";
-import { getTablesWithColumns } from "@/actions/db-actions";
+import { getPostgresqlTablesWithColumns } from "@/actions/db-actions";
 import { addBotWithDb } from "@/actions/bot-actions";
 
 // Define the schema with Zod
@@ -121,7 +121,8 @@ export default function DbConnectForm() {
     const dbUrl = form.getValues("dbUrl");
 
     try {
-      const fetchedTablesWithColumns = await getTablesWithColumns(dbUrl);
+      const fetchedTablesWithColumns =
+        await getPostgresqlTablesWithColumns(dbUrl);
       if (Object.keys(fetchedTablesWithColumns).length === 0) {
         toast.error("No tables found in the database.");
       } else {

@@ -29,7 +29,7 @@ import { api } from "../../../../../../convex/_generated/api";
 import { toast } from "sonner";
 import { uploadFilesToS3 } from "@/lib/storage";
 import { addBot } from "@/actions/bot-actions";
-import { getTableNames } from "@/actions/db-actions";
+import { DialogClose } from "@/components/ui/dialog";
 
 const fileUploadFormSchema = z.object({
   name: z.string({
@@ -176,18 +176,11 @@ export default function FileUploadForm() {
         </div>
 
         {/* Submit Button */}
-        <Button type="submit" className="w-full">
-          <Upload className="mr-2 h-4 w-4" /> Train
-        </Button>
-        <Button
-          type="button"
-          className="w-full"
-          onClick={async () => {
-            await getTableNames();
-          }}
-        >
-          <Upload className="mr-2 h-4 w-4" /> Train sample
-        </Button>
+        <DialogClose asChild>
+          <Button type="submit" className="w-full">
+            <Upload className="mr-2 h-4 w-4" /> Train
+          </Button>
+        </DialogClose>
       </form>
     </Form>
   );

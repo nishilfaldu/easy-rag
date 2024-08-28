@@ -9,13 +9,15 @@ import { internal } from "./_generated/api";
 import { embedTexts } from "./ingest/embed";
 import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
+import Anthropic from "@anthropic-ai/sdk";
+import { MessageParam } from "@anthropic-ai/sdk/resources/messages.mjs";
 
 export const answer = internalAction({
   args: {
     botId: v.id("bots"),
   },
   handler: async ({ runQuery, vectorSearch, runMutation }, { botId }) => {
-    const { OPENAI_MODEL, EMBEDDINGS_MODEL } = await runQuery(
+    const { COMPLETION_MODEL, EMBEDDINGS_MODEL } = await runQuery(
       internal.serve.getModel,
       {
         botId,
@@ -44,40 +46,79 @@ export const answer = internalAction({
     });
 
     try {
-      const openai = new OpenAI();
-      const stream = await openai.chat.completions.create({
-        model: OPENAI_MODEL,
-        messages: [
-          {
-            role: "system",
-            content:
-              "Answer the user question based on the provided documents " +
-              "or report that the question cannot be answered based on " +
-              "these documents. Keep the answer informative but brief, " +
-              "do not enumerate all possibilities.",
-          },
-          ...(relevantDocuments.map(({ text }) => ({
-            role: "system",
-            content: "Relevant document:\n\n" + text,
-          })) as ChatCompletionMessageParam[]),
-          ...(messages.map(({ isViewer, text }) => ({
-            role: isViewer ? "user" : "assistant",
-            content: text,
-          })) as ChatCompletionMessageParam[]),
-        ],
-        stream: true,
-      });
+      if (COMPLETION_MODEL.includes("gpt")) {
+        const openai = new OpenAI({
+          organization: process.env.OPENAI_ORGANIZATION,
+          project: process.env.OPENAI_PROJECT_ID,
+        });
+        const stream = await openai.chat.completions.create({
+          model: COMPLETION_MODEL,
+          messages: [
+            {
+              role: "system",
+              content:
+                "Answer the user question based on the provided documents " +
+                "or report that the question cannot be answered based on " +
+                "these documents. Keep the answer informative but brief, " +
+                "do not enumerate all possibilities.",
+            },
+            ...(relevantDocuments.map(({ text }) => ({
+              role: "system",
+              content: "Relevant document:\n\n" + text,
+            })) as ChatCompletionMessageParam[]),
+            ...(messages.map(({ isViewer, text }) => ({
+              role: isViewer ? "user" : "assistant",
+              content: text,
+            })) as ChatCompletionMessageParam[]),
+          ],
+          stream: true,
+        });
 
-      let text = "";
-      for await (const { choices } of stream) {
-        const replyDelta = choices[0].delta.content;
-        if (typeof replyDelta === "string" && replyDelta.length > 0) {
-          text += replyDelta;
-          await runMutation(internal.serve.updateBotMessage, {
-            messageId,
-            text,
-          });
+        let text = "";
+        for await (const { choices } of stream) {
+          const replyDelta = choices[0].delta.content;
+          if (typeof replyDelta === "string" && replyDelta.length > 0) {
+            text += replyDelta;
+            await runMutation(internal.serve.updateBotMessage, {
+              messageId,
+              text,
+            });
+          }
         }
+      } else if (COMPLETION_MODEL.includes("claude")) {
+        const anthropic = new Anthropic();
+
+        const msg = await anthropic.messages.stream({
+          model: COMPLETION_MODEL,
+          max_tokens: 1000,
+          temperature: 0,
+          system:
+            "Answer the user question based on the provided documents " +
+            "or report that the question cannot be answered based on " +
+            "these documents. Keep the answer informative but brief, " +
+            "do not enumerate all possibilities.",
+          messages: [
+            ...(relevantDocuments.map(({ text }) => ({
+              role: "assistant",
+              content: "Relevant document:\n\n" + text,
+            })) as MessageParam[]),
+            ...(messages.map(({ isViewer, text }) => ({
+              role: isViewer ? "user" : "assistant",
+              content: text,
+            })) as MessageParam[]),
+          ],
+        });
+
+        let text = "";
+        msg.on("text", async (replyDelta) => {
+          if (typeof replyDelta === "string" && replyDelta.length > 0) {
+            text += replyDelta;
+            await runMutation(internal.serve.updateBotMessage, {
+              messageId,
+              text,
+            });
+          }
+        });
       }
     } catch (error: any) {
       await runMutation(internal.serve.updateBotMessage, {
@@ -161,7 +202,7 @@ export const getModel = internalQuery({
       throw new ConvexError("Bot not found when looking for a model.");
     }
     return {
-      OPENAI_MODEL: bot.completionModel,
+      COMPLETION_MODEL: bot.completionModel,
       EMBEDDINGS_MODEL: bot.embeddingModel,
     };
   },

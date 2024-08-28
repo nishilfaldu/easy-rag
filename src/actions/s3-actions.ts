@@ -43,6 +43,7 @@ export async function getSignedURLForUpload({
   checksum,
   userId,
 }: GetSignedURLParams) {
+  console.log("filetype:", fileType);
   if (!ALLOWED_FILE_TYPES.includes(fileType)) {
     return {
       success: false,

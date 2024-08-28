@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 import { DbConnectFormValues } from "./db-connect-form";
-import { getTablesWithColumns } from "@/actions/db-actions";
 import { toast } from "sonner";
 
 interface DbColumnsModalProps {
