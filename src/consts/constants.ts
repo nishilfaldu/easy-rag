@@ -1,17 +1,14 @@
 export const embeddingModels = [
-  "bert-base-uncased",
-  "distilbert-base-uncased",
-  "roberta-base",
-  "microsoft/MiniLM-L12-H384-uncased",
-  "distilroberta-base",
-  "google/electra-small-discriminator",
-  "albert-base-v2",
-  "t5-small",
-  "xlm-roberta-base",
   "text-embedding-3-large",
   "text-embedding-3-small",
   "text-embedding-ada-002",
   "all-MiniLM-L6-v2",
+  "all-MiniLM-L12-v2",
+  "nli-roberta-base-v2",
+  "all-mpnet-base-v2",
+  "all-distilroberta-v1",
+  "gtr-t5-base",
+  "sentence-t5-large",
 ] as const;
 
 export const llmModels = [

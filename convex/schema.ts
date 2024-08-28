@@ -2,19 +2,16 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export const embeddingModelsField = v.union(
-  v.literal("bert-base-uncased"),
-  v.literal("distilbert-base-uncased"),
-  v.literal("roberta-base"),
-  v.literal("microsoft/MiniLM-L12-H384-uncased"),
-  v.literal("distilroberta-base"),
-  v.literal("google/electra-small-discriminator"),
-  v.literal("albert-base-v2"),
-  v.literal("t5-small"),
-  v.literal("xlm-roberta-base"),
   v.literal("text-embedding-3-large"),
   v.literal("text-embedding-3-small"),
   v.literal("text-embedding-ada-002"),
-  v.literal("all-MiniLM-L6-v2")
+  v.literal("all-MiniLM-L6-v2"),
+  v.literal("all-MiniLM-L12-v2"),
+  v.literal("nli-roberta-base-v2"),
+  v.literal("all-mpnet-base-v2"),
+  v.literal("all-distilroberta-v1"),
+  v.literal("gtr-t5-base"),
+  v.literal("sentence-t5-large")
 );
 
 export const completionModelsField = v.union(

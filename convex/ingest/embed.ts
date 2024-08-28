@@ -8,7 +8,9 @@ import { v } from "convex/values";
 import { getAll } from "convex-helpers/server/relationships";
 import { internal } from "../_generated/api";
 import { embeddingModelsField } from "../schema";
-import { pipeline } from "@xenova/transformers";
+import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddings/hf_transformers";
+import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
+import { HfInference } from "@huggingface/inference";
 
 export async function embedTexts(
   texts: string[],
@@ -31,32 +33,23 @@ export async function embedTexts(
       model: EMBEDDINGS_MODEL,
     });
     return data.map(({ embedding }) => embedding);
-  } else if (EMBEDDINGS_MODEL === "all-MiniLM-L6-v2") {
-    // Load the feature-extraction pipeline
-    const pipe = await pipeline(
-      "feature-extraction",
-      `Xenova/${EMBEDDINGS_MODEL}`,
-      {
-        quantized: false,
-      }
-    );
+  } else if (
+    EMBEDDINGS_MODEL === "all-MiniLM-L6-v2" ||
+    EMBEDDINGS_MODEL === "all-MiniLM-L12-v2" ||
+    EMBEDDINGS_MODEL === "nli-roberta-base-v2" ||
+    EMBEDDINGS_MODEL === "all-mpnet-base-v2" ||
+    EMBEDDINGS_MODEL === "all-distilroberta-v1" ||
+    EMBEDDINGS_MODEL === "gtr-t5-base" ||
+    EMBEDDINGS_MODEL === "sentence-t5-large"
+  ) {
+    const inference = new HfInference(process.env.HUGGINGFACEHUB_API_KEY);
 
-    // Perform feature extraction for the texts
-    const embeddings = await Promise.all(
-      texts.map(async (text) => {
-        const result = await pipe(text, {
-          pooling: "mean",
-          normalize: true,
-        });
-        // The result is a nested array where the outer array corresponds to the sequence
-        // and the inner array corresponds to the embedding dimensions.
-        // Typically, you might want to average these embeddings across the sequence.
-        const embedding = result.data as number[]; // Assume result[0] for simplicity
-        return embedding;
-      })
-    );
+    const embeddings = await inference.featureExtraction({
+      model: `sentence-transformers/${EMBEDDINGS_MODEL}`,
+      inputs: texts,
+    });
 
-    return embeddings;
+    return embeddings as number[][];
   } else {
     // TODO: use transformers library here - add other options here
     return [[]];
@@ -101,10 +94,10 @@ export const embedChunks = internalAction({
       embeddingModel
     );
 
-    embeddings.map((embedding, i) => {
+    embeddings.map(async (embedding, i) => {
       const chunk = chunks[i];
       if (chunk) {
-        runMutation(internal.ingest.embed.addEmbedding, {
+        await runMutation(internal.ingest.embed.addEmbedding, {
           chunkId: chunk._id,
           embedding,
         });
