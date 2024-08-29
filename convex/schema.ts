@@ -2,26 +2,29 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export const embeddingModelsField = v.union(
-  v.literal("bert-base-uncased"),
-  v.literal("distilbert-base-uncased"),
-  v.literal("roberta-base"),
-  v.literal("microsoft/MiniLM-L12-H384-uncased"),
-  v.literal("distilroberta-base"),
-  v.literal("gpt2"),
-  v.literal("google/electra-small-discriminator"),
-  v.literal("albert-base-v2"),
-  v.literal("t5-small"),
-  v.literal("xlm-roberta-base"),
   v.literal("text-embedding-3-large"),
   v.literal("text-embedding-3-small"),
-  v.literal("text-embedding-ada-002")
+  v.literal("text-embedding-ada-002"),
+  v.literal("all-MiniLM-L6-v2"),
+  v.literal("all-MiniLM-L12-v2"),
+  v.literal("nli-roberta-base-v2"),
+  v.literal("all-mpnet-base-v2"),
+  v.literal("all-distilroberta-v1"),
+  v.literal("gtr-t5-base"),
+  v.literal("sentence-t5-large")
 );
 
 export const completionModelsField = v.union(
+  // gpts
   v.literal("gpt-4o"),
   v.literal("gpt-4o-mini"),
   v.literal("gpt-4-turbo"),
-  v.literal("gpt-3.5-turbo")
+  v.literal("gpt-3.5-turbo"),
+  // anthropic
+  v.literal("claude-3-5-sonnet-20240620"),
+  v.literal("claude-3-opus-20240229"),
+  v.literal("claude-3-sonnet-20240229"),
+  v.literal("claude-3-haiku-20240307")
 );
 
 export default defineSchema({
@@ -73,9 +76,14 @@ export default defineSchema({
 
   database: defineTable({
     url: v.string(),
+    tables: v.array(
+      v.object({
+        tableName: v.string(),
+        columns: v.array(v.string()),
+      })
+    ),
     // TODO: if there's a third service that handles this, we don't need this field
-    text: v.string(),
-    columns: v.array(v.string()),
+    // text: v.string(),
     type: v.union(v.literal("postgresql"), v.literal("mysql")),
     botId: v.id("bots"),
   }),

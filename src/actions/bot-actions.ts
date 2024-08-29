@@ -75,3 +75,48 @@ export async function deleteBot(botId: Id<"bots">) {
     };
   }
 }
+
+export async function addBotWithDb(
+  bot: Omit<WithoutSystemFields<Doc<"bots">>, "progress" | "userId">,
+  database: Omit<WithoutSystemFields<Doc<"database">>, "botId">
+) {
+  const token = await getAuthToken();
+  try {
+    const botId = await fetchMutation(
+      api.bots.addWithDb,
+      {
+        completionModel: bot.completionModel,
+        embeddingModel: bot.embeddingModel,
+        name: bot.name,
+        dbUrl: database.url,
+        dbType: database.type,
+        tables: database.tables,
+      },
+      { token }
+    );
+
+    return {
+      success: true,
+      message: "Bot created successfully",
+      result: botId,
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    let errorMessage = error.message || "Unexpected error occurred";
+    if (
+      error instanceof ConvexError &&
+      error.data &&
+      typeof error.data === "string"
+    ) {
+      errorMessage = error.data;
+    }
+
+    console.error("Error creating a bot:", error);
+
+    return {
+      success: false,
+      message: errorMessage,
+      result: undefined,
+    };
+  }
+}

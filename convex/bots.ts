@@ -2,6 +2,8 @@ import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./functions";
 import { getManyFrom } from "convex-helpers/server/relationships";
 import { completionModelsField, embeddingModelsField } from "./schema";
+import { internal } from "./_generated/api";
+import { internalMutation } from "./_generated/server";
 
 export const list = query({
   args: {},
@@ -20,7 +22,7 @@ export const add = mutation({
     fileUrls: v.array(v.string()),
   },
   handler: async (
-    { db, user },
+    { db, user, scheduler },
     { name, embeddingModel, completionModel, fileUrls }
   ) => {
     const botId = await db.insert("bots", {
@@ -35,9 +37,14 @@ export const add = mutation({
       await db.insert("documents", {
         botId: botId,
         url: fileUrl,
-        text: "sample text for a sample file",
+        text: "",
       });
     }
+
+    await scheduler.runAfter(0, internal.ingest.load.files, {
+      fileUrls,
+      botId,
+    });
 
     return botId;
   },
@@ -70,5 +77,65 @@ export const getBotById = query({
     }
 
     return bot;
+  },
+});
+
+export const addWithDb = mutation({
+  args: {
+    name: v.string(),
+    embeddingModel: embeddingModelsField,
+    completionModel: completionModelsField,
+    dbUrl: v.string(),
+    dbType: v.union(v.literal("postgresql"), v.literal("mysql")),
+    tables: v.array(
+      v.object({
+        tableName: v.string(),
+        columns: v.array(v.string()),
+      })
+    ),
+  },
+  handler: async (
+    { db, user, scheduler },
+    { name, embeddingModel, completionModel, dbType, dbUrl, tables }
+  ) => {
+    const botId = await db.insert("bots", {
+      name,
+      embeddingModel,
+      completionModel,
+      userId: user._id,
+      progress: "loading",
+    });
+
+    await db.insert("database", {
+      botId: botId,
+      tables,
+      type: dbType,
+      url: dbUrl,
+    });
+
+    await scheduler.runAfter(0, internal.ingest.load.postgresdb, {
+      dbUrl,
+      tables,
+      botId,
+    });
+
+    return botId;
+  },
+});
+
+// internal mutation for update bot status
+export const updateBotStatus = internalMutation({
+  args: {
+    botId: v.id("bots"),
+    status: v.union(
+      v.literal("loading"),
+      v.literal("splitting"),
+      v.literal("embedding"),
+      v.literal("deployed"),
+      v.literal("error")
+    ),
+  },
+  handler: async ({ db }, { botId, status }) => {
+    await db.patch(botId, { progress: status });
   },
 });
