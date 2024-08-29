@@ -95,7 +95,7 @@ export const addWithDb = mutation({
     ),
   },
   handler: async (
-    { db, user },
+    { db, user, scheduler },
     { name, embeddingModel, completionModel, dbType, dbUrl, tables }
   ) => {
     const botId = await db.insert("bots", {
@@ -111,6 +111,12 @@ export const addWithDb = mutation({
       tables,
       type: dbType,
       url: dbUrl,
+    });
+
+    await scheduler.runAfter(0, internal.ingest.load.postgresdb, {
+      dbUrl,
+      tables,
+      botId,
     });
 
     return botId;

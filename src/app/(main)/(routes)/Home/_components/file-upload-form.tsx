@@ -68,7 +68,6 @@ export default function FileUploadForm() {
   });
 
   async function onSubmit(data: FileUploadFormValues) {
-    console.log(data);
     if (isUserLoading) return;
 
     if (uploadedFiles.length < 2) {

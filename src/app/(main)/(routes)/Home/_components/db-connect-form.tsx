@@ -25,7 +25,10 @@ import DatabaseReview from "./db-columns-modal";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { useState } from "react";
 import { toast } from "sonner";
-import { getPostgresqlTablesWithColumns } from "@/actions/db-actions";
+import {
+  getMysqlTablesWithColumns,
+  getPostgresqlTablesWithColumns,
+} from "@/actions/db-actions";
 import { addBotWithDb } from "@/actions/bot-actions";
 
 // Define the schema with Zod
@@ -119,10 +122,19 @@ export default function DbConnectForm() {
       return;
     }
     const dbUrl = form.getValues("dbUrl");
+    const dbType = form.getValues("dbType");
 
     try {
-      const fetchedTablesWithColumns =
-        await getPostgresqlTablesWithColumns(dbUrl);
+      let fetchedTablesWithColumns;
+
+      if (dbType === "postgresql") {
+        fetchedTablesWithColumns = await getPostgresqlTablesWithColumns(dbUrl);
+      } else if (dbType === "mysql") {
+        fetchedTablesWithColumns = await getMysqlTablesWithColumns(dbUrl);
+      } else {
+        throw new Error("Unsupported database type.");
+      }
+
       if (Object.keys(fetchedTablesWithColumns).length === 0) {
         toast.error("No tables found in the database.");
       } else {

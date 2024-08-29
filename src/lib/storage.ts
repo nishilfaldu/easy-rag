@@ -36,8 +36,6 @@ export async function uploadFilesToS3(
         }
       }
 
-      console.log("filetype", fileType);
-
       // Optionally, generate a checksum if needed for the file
       const checksum = await computeSHA256(file); // Add your logic for generating checksum
 

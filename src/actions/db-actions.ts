@@ -23,7 +23,6 @@ export async function getPostgresqlTableNames(
       WHERE table_schema = 'public';
     `);
 
-    console.log("Tables:", response.rows);
     return response.rows.map((row) => row.table_name);
   } catch (error) {
     console.error("Error fetching table names:", error);
@@ -60,7 +59,6 @@ export async function getPostgresqlTablesWithColumns(databaseUrl: string) {
       return acc;
     }, {});
 
-    console.log("Tables with Columns:", tablesWithColumns);
     return tablesWithColumns;
   } catch (error) {
     console.error("Error fetching tables and columns:", error);
@@ -82,7 +80,9 @@ export async function getMysqlTablesWithColumns(databaseUrl: string) {
       ORDER BY TABLE_NAME, ORDINAL_POSITION;
     `);
 
-    const tablesWithColumns = rows.reduce((acc: any, row: any) => {
+    const tablesWithColumns = (
+      rows as Array<{ table_name: string; column_name: string }>
+    ).reduce((acc: any, row: any) => {
       if (!acc[row.table_name]) {
         acc[row.table_name] = [];
       }
@@ -90,7 +90,6 @@ export async function getMysqlTablesWithColumns(databaseUrl: string) {
       return acc;
     }, {});
 
-    console.log("Tables with Columns:", tablesWithColumns);
     return tablesWithColumns;
   } catch (error) {
     console.error("Error fetching tables and columns:", error);
