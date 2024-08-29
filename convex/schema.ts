@@ -35,7 +35,6 @@ export default defineSchema({
     firstName: v.string(),
     lastName: v.string(),
     phoneNumber: v.string(),
-
     imageUrl: v.string(),
   })
     .index("byUsername", ["username"])

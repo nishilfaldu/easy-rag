@@ -1,12 +1,14 @@
 "use node";
 
 import { v } from "convex/values";
-import { internalAction } from "../_generated/server";
+import { internalAction, internalMutation } from "../_generated/server";
 import { internal } from "../_generated/api";
 import { pdfToText } from "pdf-ts";
 import mammoth from "mammoth";
 import { Pool } from "pg";
-import fs from "fs";
+import { embedTexts } from "./embed";
+import { embeddingModelsField } from "../schema";
+import mysql from "mysql2/promise";
 
 export const files = internalAction({
   args: {
@@ -131,7 +133,7 @@ async function processDoc(response: Response): Promise<string> {
 //   });
 // }
 
-// database loading
+// postgres database loading
 export const postgresdb = internalAction({
   args: {
     dbUrl: v.string(),
@@ -142,12 +144,13 @@ export const postgresdb = internalAction({
       })
     ),
     botId: v.id("bots"),
+    embeddingModel: embeddingModelsField,
   },
-  handler: async (ctx, { dbUrl, tables, botId }) => {
+  handler: async (ctx, { dbUrl, tables, botId, embeddingModel }) => {
     // Step 1: Update bot status to fetching
     await ctx.runMutation(internal.bots.updateBotStatus, {
       botId,
-      status: "loading",
+      status: "splitting",
     });
 
     // Step 2: Initialize PostgreSQL connection pool
@@ -163,6 +166,7 @@ export const postgresdb = internalAction({
     });
 
     const client = await pool.connect();
+
     try {
       // Step 3: Iterate over each table and fetch the data
       for (const table of tables) {
@@ -173,32 +177,50 @@ export const postgresdb = internalAction({
 
         const res = await client.query(query);
 
-        console.log(res);
+        // Step 4: Store the entire result set as a document
+        const document = JSON.stringify(res.rows);
+        const documentId = await ctx.runMutation(
+          internal.ingest.embed.storedbdocument,
+          {
+            botId, // Assuming botId is used as documentId
+            document,
+            url: dbUrl,
+          }
+        );
 
+        // Step 6: Update bot status to processing
+        await ctx.runMutation(internal.bots.updateBotStatus, {
+          botId,
+          status: "embedding",
+        });
+
+        // Step 5: Create chunks by stringifying each row and store them individually
         for (const row of res.rows) {
-          // Step 4: Concatenate all column values into a single chunk
-          const chunk = Object.values(row)
-            .filter((value) => value !== null)
-            .join(" ");
+          const chunk = JSON.stringify(row);
 
-          // Step 5: Generate embedding for the concatenated chunk
-          // const embedding = await generateEmbedding(chunk);
+          // Store the chunk and its embedding (if applicable)
+          const chunkId = await ctx.runMutation(
+            internal.ingest.embed.storechunk,
+            {
+              documentId,
+              text: chunk,
+            }
+          );
+          // Generate embedding for the concatenated chunk (if needed)
+          const [embedding] = await embedTexts([chunk], embeddingModel);
 
-          // Step 6: Insert the chunk and its embedding into the text_chunks table
-          // await ctx.runMutation(internal.ingest.load.storeChunk, {
-          //   documentId: botId, // Assuming botId is used as documentId
-          //   chunk,
-          //   embedding,
-          // });
+          await ctx.runMutation(internal.ingest.embed.storeembedding, {
+            chunkId,
+            embedding,
+          });
         }
       }
 
-      // Step 7: Update bot status to processing
-      // await ctx.runMutation(internal.bots.updateBotStatus, {
-      //   botId,
-      //   status: "processing",
-      // });
-    } catch (error) {
+      await ctx.runMutation(internal.bots.updateBotStatus, {
+        botId,
+        status: "deployed",
+      });
+    } catch (error: any) {
       console.error("Error processing database:", error, error.message);
       await ctx.runMutation(internal.bots.updateBotStatus, {
         botId,
@@ -206,6 +228,97 @@ export const postgresdb = internalAction({
       });
     } finally {
       client.release(); // Ensure the client is released back to the pool
+    }
+  },
+});
+
+// mysql database loading
+export const mysqldb = internalAction({
+  args: {
+    dbUrl: v.string(),
+    tables: v.array(
+      v.object({
+        tableName: v.string(),
+        columns: v.array(v.string()),
+      })
+    ),
+    botId: v.id("bots"),
+    embeddingModel: embeddingModelsField,
+  },
+  handler: async (ctx, { dbUrl, tables, botId, embeddingModel }) => {
+    // Step 1: Update bot status to fetching
+    await ctx.runMutation(internal.bots.updateBotStatus, {
+      botId,
+      status: "splitting",
+    });
+
+    // Step 2: Initialize MySQL connection
+    const connection = await mysql.createConnection(dbUrl);
+
+    try {
+      // Step 3: Iterate over each table and fetch the data
+      for (const table of tables) {
+        const { tableName, columns } = table;
+
+        const columnList = columns.join(", ");
+        const query = `SELECT ${columnList} FROM ${tableName}`;
+
+        const [rows] = await connection.execute(query);
+
+        // Step 4: Store the entire result set as a document
+        const document = JSON.stringify(rows);
+        const documentId = await ctx.runMutation(
+          internal.ingest.embed.storedbdocument,
+          {
+            botId, // Assuming botId is used as documentId
+            document,
+            url: dbUrl,
+          }
+        );
+
+        // Step 6: Update bot status to processing
+        await ctx.runMutation(internal.bots.updateBotStatus, {
+          botId,
+          status: "embedding",
+        });
+
+        // Step 5: Create chunks by stringifying each row and store them individually
+        for (const row of rows as Array<{
+          table_name: string;
+          column_name: string;
+        }>) {
+          const chunk = JSON.stringify(row);
+
+          // Store the chunk and its embedding (if applicable)
+          const chunkId = await ctx.runMutation(
+            internal.ingest.embed.storechunk,
+            {
+              documentId,
+              text: chunk,
+            }
+          );
+          // Generate embedding for the concatenated chunk (if needed)
+          const [embedding] = await embedTexts([chunk], embeddingModel);
+
+          await ctx.runMutation(internal.ingest.embed.storeembedding, {
+            chunkId,
+            embedding,
+          });
+        }
+      }
+
+      await ctx.runMutation(internal.bots.updateBotStatus, {
+        botId,
+        status: "deployed",
+      });
+    } catch (error: any) {
+      console.error("Error processing database:", error, error.message);
+      await ctx.runMutation(internal.bots.updateBotStatus, {
+        botId,
+        status: "error",
+      });
+    } finally {
+      await connection.end(); // Ensure the connection is closed
     }
   },
 });

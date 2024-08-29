@@ -8,8 +8,6 @@ import { v } from "convex/values";
 import { getAll } from "convex-helpers/server/relationships";
 import { internal } from "../_generated/api";
 import { embeddingModelsField } from "../schema";
-import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddings/hf_transformers";
-import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 import { HfInference } from "@huggingface/inference";
 
 export async function embedTexts(
@@ -25,8 +23,9 @@ export async function embedTexts(
     EMBEDDINGS_MODEL === "text-embedding-ada-002"
   ) {
     const openai = new OpenAI({
-      organization: process.env.OPENAI_ORGANIZATION,
-      project: process.env.OPENAI_PROJECT_ID,
+      // organization: process.env.OPENAI_ORGANIZATION,
+      // project: process.env.OPENAI_PROJECT_ID,
+      apiKey: process.env.OPENAI_API_KEY,
     });
     const { data } = await openai.embeddings.create({
       input: texts,
@@ -122,6 +121,53 @@ export const addEmbedding = internalMutation({
       embedding,
       chunkId,
     });
+    await db.patch(chunkId, { embeddingId });
+  },
+});
+
+// helper internal mutations for database operations
+export const storedbdocument = internalMutation({
+  args: {
+    botId: v.id("bots"),
+    document: v.string(),
+    url: v.string(),
+  },
+  handler: async ({ db }, { botId, document, url }) => {
+    return await db.insert("documents", {
+      botId: botId,
+      text: document,
+      url,
+    });
+  },
+});
+
+export const storechunk = internalMutation({
+  args: {
+    documentId: v.id("documents"),
+    text: v.string(),
+  },
+  handler: async ({ db }, { documentId, text }) => {
+    const chunkId = await db.insert("chunks", {
+      documentId,
+      text,
+      embeddingId: null,
+    });
+
+    return chunkId;
+  },
+});
+
+export const storeembedding = internalMutation({
+  args: {
+    chunkId: v.id("chunks"),
+    embedding: v.array(v.number()),
+  },
+  handler: async ({ db }, { chunkId, embedding }) => {
+    const embeddingId = await db.insert("embeddings", {
+      chunkId,
+      embedding,
+    });
+
     await db.patch(chunkId, { embeddingId });
   },
 });

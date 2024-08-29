@@ -113,11 +113,21 @@ export const addWithDb = mutation({
       url: dbUrl,
     });
 
-    await scheduler.runAfter(0, internal.ingest.load.postgresdb, {
-      dbUrl,
-      tables,
-      botId,
-    });
+    if ((dbType = "postgresql")) {
+      await scheduler.runAfter(0, internal.ingest.load.postgresdb, {
+        dbUrl,
+        tables,
+        botId,
+        embeddingModel,
+      });
+    } else if (dbType === "mysql") {
+      await scheduler.runAfter(0, internal.ingest.load.mysqldb, {
+        dbUrl,
+        tables,
+        botId,
+        embeddingModel,
+      });
+    }
 
     return botId;
   },
