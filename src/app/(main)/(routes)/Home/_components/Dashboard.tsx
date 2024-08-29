@@ -6,12 +6,13 @@ import { useConvexAuth, useQuery } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import EmptyState from "@/app/_components/empty-state";
+import { HomeIcon } from "lucide-react";
 
 const getStatusColor = (progress: string) => {
-  if (progress === "Error") return "bg-red-100 text-red-800";
-  if (progress === "Loading") return "bg-yellow-100 text-yellow-800";
-  if (progress === "Splitting") return "bg-blue-100 text-blue-800";
-  if (progress === "Embedding") return "bg-purple-100 text-purple-800";
+  if (progress === "error") return "bg-red-100 text-red-800";
+  if (progress === "loading") return "bg-yellow-100 text-yellow-800";
+  if (progress === "splitting") return "bg-blue-100 text-blue-800";
+  if (progress === "embedding") return "bg-purple-100 text-purple-800";
   return "bg-green-100 text-green-800";
 };
 
@@ -28,10 +29,15 @@ export default function Dashboard() {
   return (
     <div className="container mx-auto p-4">
       <header className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Home</h1>
-        <NewBotForm />
+      <div className="flex items-center">
+        <HomeIcon className="mr-2" />
+        <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#4c5cfc] to-[#b880fc]">
+          Home
+        </h1>
+      </div>
+      <NewBotForm />
       </header>
-
+      
       {isBotsLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {/* Render 4 skeleton cards as placeholders */}
@@ -42,11 +48,11 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent className="p-3">
                 <div className="mb-2 flex justify-between items-center">
-                  <span className="text-xs font-medium">Status:</span>
+                  <span className="text-sm font-semibold">Status:</span>
                   <Skeleton className="h-4 w-1/4 bg-gray-300 rounded-md" />
                 </div>
                 <div className="mb-2">
-                  <h3 className="text-xs font-semibold mb-1">
+                  <h3 className="text-sm font-semibold mb-1">
                     Embedded Transformers:
                   </h3>
                   <div className="flex flex-wrap gap-1">
@@ -55,7 +61,7 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-xs font-semibold mb-1">Models:</h3>
+                  <h3 className="text-sm font-semibold mb-1">Models:</h3>
                   <div className="flex flex-wrap gap-1">
                     <Skeleton className="h-6 w-1/4 bg-gray-300 rounded-full" />
                     <Skeleton className="h-6 w-1/4 bg-gray-300 rounded-full" />
@@ -86,9 +92,9 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent className="p-3">
                 <div className="mb-2 flex justify-between items-center">
-                  <span className="text-xs font-medium">Status:</span>
+                  <span className="text-sm font-semibold">Status:</span>
                   <span
-                    className={`text-xs font-semibold px-2 py-0.5 rounded-full ${getStatusColor(
+                    className={`text-sm font-semibold px-2 py-0.5 rounded-full ${getStatusColor(
                       bot.progress
                     )}`}
                   >
@@ -96,22 +102,22 @@ export default function Dashboard() {
                   </span>
                 </div>
                 <div className="mb-2">
-                  <h3 className="text-xs font-semibold mb-1">
+                  <h3 className="text-sm font-semibold mb-1">
                     Embedded Transformers:
                   </h3>
                   <div className="flex flex-wrap gap-1">
                     {/* {bot.embeddedTransformers.map((transformer, index) => ( */}
-                    <span className="bg-secondary text-secondary-foreground px-1.5 py-0.5 rounded-full text-[10px]">
+                    <span className="bg-secondary text-secondary-foreground px-1.5 py-0.5 rounded-full text-[12px]">
                       {bot.embeddingModel}
                     </span>
                     {/* ))} */}
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-xs font-semibold mb-1">Models:</h3>
+                  <h3 className="text-sm font-semibold mb-1">Models:</h3>
                   <div className="flex flex-wrap gap-1">
                     {/* {bot.models.map((model, index) => ( */}
-                    <span className="bg-accent text-accent-foreground px-1.5 py-0.5 rounded-full text-[10px]">
+                    <span className="bg-accent text-accent-foreground px-1.5 py-0.5 rounded-full text-[12px]">
                       {bot.completionModel}
                     </span>
                     {/* ))} */}
