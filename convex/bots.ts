@@ -31,6 +31,7 @@ export const add = mutation({
       completionModel,
       userId: user._id,
       progress: "loading",
+      isDb: false,
     });
 
     for (const fileUrl of fileUrls) {
@@ -104,6 +105,7 @@ export const addWithDb = mutation({
       completionModel,
       userId: user._id,
       progress: "loading",
+      isDb: true,
     });
 
     await db.insert("database", {

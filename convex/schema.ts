@@ -54,7 +54,7 @@ export default defineSchema({
       v.literal("deployed"),
       v.literal("error")
     ),
-
+    isDb: v.boolean(),
     userId: v.id("users"),
   }).index("byUserId", ["userId"]),
 
