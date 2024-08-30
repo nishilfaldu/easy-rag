@@ -49,7 +49,7 @@ export const answer = internalAction({
       if (COMPLETION_MODEL.includes("gpt")) {
         const openai = new OpenAI({
           // organization: process.env.OPENAI_ORGANIZATION,
-          // project: process.env.OPENAI_PROJECT_ID,
+          project: process.env.OPENAI_PROJECT_ID,
           apiKey: process.env.OPENAI_API_KEY,
         });
         const stream = await openai.chat.completions.create({
@@ -86,6 +86,8 @@ export const answer = internalAction({
             });
           }
         }
+
+      console.log(text)
       } else if (COMPLETION_MODEL.includes("claude")) {
         const anthropic = new Anthropic();
 
@@ -122,6 +124,7 @@ export const answer = internalAction({
         });
       }
     } catch (error: any) {
+      console.log(error, error.message)
       await runMutation(internal.serve.updateBotMessage, {
         messageId,
         text: "I cannot reply at this time. Reach out to us on our customer service helpline.",

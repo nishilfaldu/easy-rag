@@ -7,6 +7,7 @@ import { api } from "../../../../../../convex/_generated/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import EmptyState from "@/app/_components/empty-state";
 import { HomeIcon } from "lucide-react";
+import Link from "next/link";
 
 const getStatusColor = (progress: string) => {
   if (progress === "error") return "bg-red-100 text-red-800";
@@ -81,6 +82,7 @@ export default function Dashboard() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {bots.map((bot) => (
+            <Link href={`bot/${bot._id}`}>
             <Card
               key={bot._id}
               className="overflow-hidden rounded-lg shadow hover:shadow-md transition-shadow duration-300"
@@ -124,7 +126,7 @@ export default function Dashboard() {
                   </div>
                 </div>
               </CardContent>
-            </Card>
+            </Card></Link>
           ))}
         </div>
       )}

@@ -2,13 +2,27 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { Bot, Database, File, Cpu, Brain } from 'lucide-react'
 import Chatbot from './chatbot'
+import { FunctionReturnType } from 'convex/server'
+import type { api } from "../../../../../../../convex/_generated/api";
 
-export default function BotDetailsPage() {
+interface BotDetailsPageProps {
+  bot: FunctionReturnType<typeof api.bots.getBotById> | undefined;
+}
+
+export default function BotDetailsPage({bot} : BotDetailsPageProps) {
+  console.log(bot)
   const [leftWidth, setLeftWidth] = useState(50)
   const [isDragging, setIsDragging] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([])
+  const getStatusColor = (progress: string | undefined) => {
+    if (progress === "error") return " bg-red-100 text-red-800";
+    if (progress === "loading") return "bg-yellow-100 text-yellow-800";
+    if (progress === "splitting") return "bg-blue-100 text-blue-800";
+    if (progress === "embedding") return "bg-purple-100 text-purple-800";
+    return "bg-green-100 text-green-800";
+  };
 
   const handleMouseDown = useCallback(() => {
     setIsDragging(true)
@@ -54,42 +68,48 @@ export default function BotDetailsPage() {
             <Bot className="w-8 h-8 text-purple-500" />
             <div>
               <span className="font-semibold text-gray-700 dark:text-gray-300">Name:</span> 
-              <span className="ml-2 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded-full text-sm">AI Assistant</span>
+              <span className="ml-2 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded-full text-sm">{bot?.name}</span>
             </div>
           </div>
           <div className="flex items-center space-x-3 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
             <div>
-              <span className="font-semibold text-gray-700 dark:text-gray-300">Status:</span> 
-              <span className="ml-2 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded-full text-sm">Active</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-300">Status:  </span> 
+            
+                    <span
+                    className={`text-sm font-normal px-2 py-0.5 rounded-full ${getStatusColor(
+                      bot?.progress
+                    )}`}
+                  >{bot?.progress} </span>
             </div>
           </div>
-          <div className="flex items-center space-x-3 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+        
+          { !bot?.isDb ? (<div className="flex items-center space-x-3 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
             <File className="w-8 h-8 text-blue-500" />
             <div>
               <span className="font-semibold text-gray-700 dark:text-gray-300">Files Uploaded:</span> 
               <span className="ml-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full text-sm">chatbot_data.json</span>
             </div>
-          </div>
-          <div className="flex items-center space-x-3 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+          </div>)
+          : (<div className="flex items-center space-x-3 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
             <Database className="w-8 h-8 text-indigo-500" />
             <div>
               <span className="font-semibold text-gray-700 dark:text-gray-300">Database:</span> 
               <span className="ml-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 px-2 py-1 rounded-full text-sm">PostgreSQL</span>
             </div>
-          </div>
+          </div>)}
           <div className="flex items-center space-x-3 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
             <Cpu className="w-8 h-8 text-orange-500" />
             <div>
               <span className="font-semibold text-gray-700 dark:text-gray-300">Embedding Transformer:</span> 
-              <span className="ml-2 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 px-2 py-1 rounded-full text-sm">BERT</span>
+              <span className="ml-2 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 px-2 py-1 rounded-full text-sm">{bot?.embeddingModel}</span>
             </div>
           </div>
           <div className="flex items-center space-x-3 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
             <Brain className="w-8 h-8 text-pink-500" />
             <div>
               <span className="font-semibold text-gray-700 dark:text-gray-300">LLM Model:</span> 
-              <span className="ml-2 bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200 px-2 py-1 rounded-full text-sm">GPT-3.5</span>
+              <span className="ml-2 bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200 px-2 py-1 rounded-full text-sm">{bot?.completionModel}</span>
             </div>
           </div>
         </div>
@@ -100,7 +120,7 @@ export default function BotDetailsPage() {
       >
         <div className="w-1 h-8 bg-gray-400 dark:bg-gray-500 rounded-full"></div>
       </div>
-      <Chatbot/>
+      <Chatbot bot={bot}/>
     </div>
   )
 }
