@@ -1,10 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import { Menu, User } from "lucide-react";
-import Image from "next/image";
 import { SignOutButton, useClerk } from "@clerk/nextjs";
 import { UserProfile } from "@clerk/nextjs";
+import { Menu, User } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+
+import Logo from "../../../public/_images/logo.png";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,7 +15,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import Logo from "../../../public/_images/logo.png";
+
+
+
 
 export default function NavBar() {
   const { openUserProfile } = useClerk();

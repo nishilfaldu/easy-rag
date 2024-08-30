@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
+import { useState } from "react";
 
+import DbConnectForm from "./db-connect-form";
+import FileUploadForm from "./file-upload-form";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -13,8 +15,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import FileUploadForm from "./file-upload-form";
-import DbConnectForm from "./db-connect-form";
+
+
+
 
 export default function NewBotForm() {
   const [isOpen, setIsOpen] = useState(false);

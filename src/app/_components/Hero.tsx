@@ -1,14 +1,17 @@
-"use client"
-import React from "react";
-import { useTypewriter, Cursor } from "react-simple-typewriter";
-import BackgroundCircles from "./BackgroundCircles";
-import Image from "next/image";
-import { motion } from "framer-motion";
-import logo from "../../../public/_images/logo.png";
+"use client";
 import { SignUpButton, SignInButton, SignIn, UserButton } from "@clerk/nextjs";
 import { useConvexAuth } from "convex/react";
-import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
+import React from "react";
+import { useTypewriter, Cursor } from "react-simple-typewriter";
+
+import BackgroundCircles from "./BackgroundCircles";
+import logo from "../../../public/_images/logo.png";
+import { Button } from "@/components/ui/button";
+
+
 
 
 
@@ -54,7 +57,7 @@ const Hero = () => {
           height={400}
           priority={true}
           alt="Logo"
-          className={`relative rounded-full h-40 w-40 mx-auto object-cover z-20 border-4`}
+          className={"relative rounded-full h-40 w-40 mx-auto object-cover z-20 border-4"}
         />
         <h2 className="text-sm uppercase text-gray-500 pb-2 tracking-[15px] z-20 cursor-default ">
           EASY RAG

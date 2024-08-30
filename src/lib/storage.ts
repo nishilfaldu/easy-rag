@@ -1,8 +1,11 @@
 import { toast } from "sonner";
 
 import { computeSHA256 } from "./utils";
+import type { Id } from "../../convex/_generated/dataModel";
 import { getSignedURLForUpload } from "@/actions/s3-actions";
-import { Id } from "../../convex/_generated/dataModel";
+
+
+
 
 interface UploadImageResult {
   success: boolean;
@@ -16,7 +19,7 @@ export async function uploadFilesToS3(
 ): Promise<UploadImageResult> {
   try {
     // Step 1: Generate signed URLs and upload each image
-    const uploadPromises = files.map(async (file) => {
+    const uploadPromises = files.map(async file => {
       let fileType = file.type;
       const fileSize = file.size;
 

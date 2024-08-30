@@ -1,11 +1,12 @@
 "use server";
 
-import { WithoutSystemFields } from "convex/server";
-import { Doc, Id } from "../../convex/_generated/dataModel";
-import { getAuthToken } from "@/lib/auth";
 import { fetchMutation } from "convex/nextjs";
-import { api } from "../../convex/_generated/api";
+import type { WithoutSystemFields } from "convex/server";
 import { ConvexError } from "convex/values";
+
+import { api } from "../../convex/_generated/api";
+import type { Doc, Id } from "../../convex/_generated/dataModel";
+import { getAuthToken } from "@/lib/auth";
 
 export async function addBot(
   bot: Omit<WithoutSystemFields<Doc<"bots">>, "progress" | "userId" | "isDb">,
@@ -34,8 +35,6 @@ export async function addBot(
       message: "Bot created successfully",
       result: botId,
     };
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     let errorMessage = error.message || "Unexpected error occurred";
     if (
@@ -100,7 +99,6 @@ export async function addBotWithDb(
       message: "Bot created successfully",
       result: botId,
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     let errorMessage = error.message || "Unexpected error occurred";
     if (

@@ -1,42 +1,48 @@
-"use client"
-import { useState, useRef, useEffect } from 'react'
-import { MessageSquare, Send } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ScrollArea } from "@/components/ui/scroll-area"
+"use client";
+import { useConvexAuth, useMutation, useQuery } from "convex/react";
+import type { FunctionReturnType } from "convex/server";
+import { MessageSquare, Send } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+
 import { api } from "../../../../../../../convex/_generated/api";
-import { FunctionReturnType } from 'convex/server'
-import { useConvexAuth, useMutation, useQuery } from 'convex/react'
-import { Id } from '../../../../../../../convex/_generated/dataModel'
+import type { Id } from "../../../../../../../convex/_generated/dataModel";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+
+
+
+
 
 interface ChatbotProps {
     bot: FunctionReturnType<typeof api.bots.getBotById> | undefined;
   }
 
-export default function Chatbot( {bot} : ChatbotProps){
-    const {isAuthenticated} = useConvexAuth()
+export default function Chatbot( { bot } : ChatbotProps) {
+    const { isAuthenticated } = useConvexAuth();
     const messages = useQuery(api.messages.list, isAuthenticated && bot ? {
-        botId: bot._id
-    } : "skip")
-    const sendMessage = useMutation(api.messages.send)
-    const [leftWidth] = useState(50)
-    const chatContainerRef = useRef<HTMLDivElement>(null)
+        botId: bot._id,
+    } : "skip");
+    const sendMessage = useMutation(api.messages.send);
+    const [leftWidth] = useState(50);
+    const chatContainerRef = useRef<HTMLDivElement>(null);
     // const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([])
-    const [inputValue, setInputValue] = useState('')
+    const [inputValue, setInputValue] = useState("");
 
     async function handleSendMessage(botId: Id<"bots"> | undefined, isViewer: boolean, text: string) {
-        if(!botId) return;
+        if(!botId) { return; }
         sendMessage({
             botId: botId,
             isViewer: true,
-            text: inputValue
-        })
+            text: inputValue,
+        });
         setInputValue("");
     }
 
     useEffect(() => {
-        chatContainerRef.current?.scrollTo(0, chatContainerRef.current.scrollHeight)
-    }, [messages])
+        chatContainerRef.current?.scrollTo(0, chatContainerRef.current.scrollHeight);
+    }, [messages]);
 
     return (
         <div className="flex flex-col" style={{ width: `${100 - leftWidth}%` }}>
@@ -54,13 +60,13 @@ export default function Chatbot( {bot} : ChatbotProps){
                 {messages?.map((message, index) => (
                     <div
                         key={index}
-                        className={`mb-4 ${message.isViewer ? 'text-right' : 'text-left'}`}
+                        className={`mb-4 ${message.isViewer ? "text-right" : "text-left"}`}
                     >
                         <div
                             className={`inline-block p-3 rounded-lg max-w-[80%] shadow-md transition-all duration-300 ease-in-out ${
                                 message.isViewer
-                                ? 'bg-gradient-to-r from-purple-500 to-[#4c5cfc] text-white rounded-br-none animate-slide-left' 
-                                : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-bl-none animate-slide-right'
+                                ? "bg-gradient-to-r from-purple-500 to-[#4c5cfc] text-white rounded-br-none animate-slide-left" 
+                                : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-bl-none animate-slide-right"
                             }`}
                         >
                             {message.isViewer ? (
@@ -82,8 +88,8 @@ export default function Chatbot( {bot} : ChatbotProps){
                         type="text"
                         placeholder="Type your message..."
                         value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && bot && handleSendMessage(
+                        onChange={e => setInputValue(e.target.value)}
+                        onKeyPress={e => e.key === "Enter" && bot && handleSendMessage(
                             bot?._id,
                             true,
                             inputValue
@@ -96,7 +102,7 @@ export default function Chatbot( {bot} : ChatbotProps){
                         bot?._id,
                             true,
                             inputValue 
-                        )
+                        );
                     }}
                     className="bg-gradient-to-r from-purple-500 to-[#4c5cfc] hover:from-purple-600 hover:to-pink-600 text-white">
                         <Send className="h-4 w-4 mr-2" />

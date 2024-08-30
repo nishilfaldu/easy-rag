@@ -1,13 +1,19 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import DatabaseReview from "./db-columns-modal";
+import { addBotWithDb } from "@/actions/bot-actions";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  getMysqlTablesWithColumns,
+  getPostgresqlTablesWithColumns,
+} from "@/actions/db-actions";
+import { Button } from "@/components/ui/button";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import {
   Form,
   FormField,
@@ -16,20 +22,17 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { databaseTypes, embeddingModels, llmModels } from "@/consts/constants";
-import DatabaseReview from "./db-columns-modal";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
-import { useState } from "react";
-import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
 import {
-  getMysqlTablesWithColumns,
-  getPostgresqlTablesWithColumns,
-} from "@/actions/db-actions";
-import { addBotWithDb } from "@/actions/bot-actions";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { databaseTypes, embeddingModels, llmModels } from "@/consts/constants";
+
+
 
 // Define the schema with Zod
 const dbConnectFormSchema = z.object({
@@ -87,7 +90,7 @@ export default function DbConnectForm() {
       ([tableName, columns]) => {
         return {
           tableName,
-          columns: columns.filter((column) =>
+          columns: columns.filter(column =>
             data.selectedColumns.includes(column)
           ),
         };
@@ -96,7 +99,7 @@ export default function DbConnectForm() {
 
     // filter out the object with no columns
     const filteredSelectedTables = selectedTables.filter(
-      (table) => table.columns.length > 0
+      table => table.columns.length > 0
     );
 
     const database = {
@@ -119,6 +122,7 @@ export default function DbConnectForm() {
       form.formState.errors.dbUrl && form.formState.errors.dbUrl.message;
     if (errorInDbUrl) {
       toast.error("Please enter a valid database URL.");
+
       return;
     }
     const dbUrl = form.getValues("dbUrl");
@@ -183,7 +187,7 @@ export default function DbConnectForm() {
                     <SelectValue placeholder="Select embedding" />
                   </SelectTrigger>
                   <SelectContent>
-                    {embeddingModels.map((embed) => (
+                    {embeddingModels.map(embed => (
                       <SelectItem key={embed} value={embed}>
                         {embed}
                       </SelectItem>
@@ -212,7 +216,7 @@ export default function DbConnectForm() {
                     <SelectValue placeholder="Select LLM model" />
                   </SelectTrigger>
                   <SelectContent>
-                    {llmModels.map((model) => (
+                    {llmModels.map(model => (
                       <SelectItem key={model} value={model}>
                         {model}
                       </SelectItem>
@@ -256,7 +260,7 @@ export default function DbConnectForm() {
                     <SelectValue placeholder="Select database type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {databaseTypes.map((type) => (
+                    {databaseTypes.map(type => (
                       <SelectItem key={type} value={type}>
                         {type}
                       </SelectItem>

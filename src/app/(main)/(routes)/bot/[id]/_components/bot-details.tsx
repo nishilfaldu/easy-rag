@@ -1,63 +1,69 @@
-"use client"
-import { useState, useCallback, useRef, useEffect } from 'react'
-import { Bot, Database, File, Cpu, Brain } from 'lucide-react'
-import Chatbot from './chatbot'
-import { FunctionReturnType } from 'convex/server'
+"use client";
+import type { FunctionReturnType } from "convex/server";
+import { Bot, Database, File, Cpu, Brain } from "lucide-react";
+import { useState, useCallback, useRef, useEffect } from "react";
+
+import Chatbot from "./chatbot";
 import type { api } from "../../../../../../../convex/_generated/api";
+
+
+
 
 interface BotDetailsPageProps {
   bot: FunctionReturnType<typeof api.bots.getBotById> | undefined;
 }
 
-export default function BotDetailsPage({bot} : BotDetailsPageProps) {
-  console.log(bot)
-  const [leftWidth, setLeftWidth] = useState(50)
-  const [isDragging, setIsDragging] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const chatContainerRef = useRef<HTMLDivElement>(null)
-  const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([])
+export default function BotDetailsPage({ bot } : BotDetailsPageProps) {
+  console.log(bot);
+  const [leftWidth, setLeftWidth] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([]);
   const getStatusColor = (progress: string | undefined) => {
-    if (progress === "error") return " bg-red-100 text-red-800";
-    if (progress === "loading") return "bg-yellow-100 text-yellow-800";
-    if (progress === "splitting") return "bg-blue-100 text-blue-800";
-    if (progress === "embedding") return "bg-purple-100 text-purple-800";
+    if (progress === "error") { return " bg-red-100 text-red-800"; }
+    if (progress === "loading") { return "bg-yellow-100 text-yellow-800"; }
+    if (progress === "splitting") { return "bg-blue-100 text-blue-800"; }
+    if (progress === "embedding") { return "bg-purple-100 text-purple-800"; }
+
     return "bg-green-100 text-green-800";
   };
 
   const handleMouseDown = useCallback(() => {
-    setIsDragging(true)
-  }, [])
+    setIsDragging(true);
+  }, []);
 
   const handleMouseUp = useCallback(() => {
-    setIsDragging(false)
-  }, [])
+    setIsDragging(false);
+  }, []);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (!isDragging || !containerRef.current) return
-      const containerRect = containerRef.current.getBoundingClientRect()
-      const newLeftWidth = ((e.clientX - containerRect.left) / containerRect.width) * 100
-      setLeftWidth(Math.max(20, Math.min(80, newLeftWidth)))
+      if (!isDragging || !containerRef.current) { return; }
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const newLeftWidth = ((e.clientX - containerRect.left) / containerRect.width) * 100;
+      setLeftWidth(Math.max(20, Math.min(80, newLeftWidth)));
     },
     [isDragging]
-  )
+  );
 
   useEffect(() => {
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [handleMouseMove, handleMouseUp])
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]);
 
 
 
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
-  }, [messages])
+  }, [messages]);
 
   return (
     <div ref={containerRef} className="flex h-[calc(100vh-4rem)] bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-foreground overflow-hidden">
@@ -122,5 +128,5 @@ export default function BotDetailsPage({bot} : BotDetailsPageProps) {
       </div>
       <Chatbot bot={bot}/>
     </div>
-  )
+  );
 }

@@ -6,7 +6,11 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl as getSignedUrlS3 } from "@aws-sdk/s3-request-presigner";
 import { v4 as uuidv4 } from "uuid";
-import { Id } from "../../convex/_generated/dataModel";
+
+import type { Id } from "../../convex/_generated/dataModel";
+
+
+
 
 const s3Client = new S3Client({
   region: process.env.AWS_BUCKET_REGION!,

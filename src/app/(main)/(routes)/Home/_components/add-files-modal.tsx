@@ -1,6 +1,7 @@
 import { Trash2Icon, Upload } from "lucide-react";
-import { toast } from "sonner";
 import { FaFilePdf, FaFileWord, FaFileAlt, FaFileCsv } from "react-icons/fa"; // Import file icons
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,6 +15,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { truncateString } from "@/lib/utils";
+
+
+
 
 interface AddFilesModalProps {
   uploadedFiles: File[];
@@ -35,20 +39,21 @@ export function AddFilesModal({
       return;
     }
 
-    setUploadedFiles((prevFiles) => [...prevFiles, ...files]);
+    setUploadedFiles(prevFiles => [...prevFiles, ...files]);
   };
 
   const removeFile = (index: number) => {
-    setUploadedFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    setUploadedFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
   };
 
   const getFileIcon = (fileType: string) => {
     if (fileType.includes("pdf"))
-      return <FaFilePdf className="text-red-500 h-12 w-12" />;
+      { return <FaFilePdf className="text-red-500 h-12 w-12" />; }
     if (fileType.includes("word"))
-      return <FaFileWord className="text-blue-500 h-12 w-12" />;
+      { return <FaFileWord className="text-blue-500 h-12 w-12" />; }
     if (fileType.includes("csv"))
-      return <FaFileCsv className="text-green-500 h-12 w-12" />;
+      { return <FaFileCsv className="text-green-500 h-12 w-12" />; }
+
     return <FaFileAlt className="text-gray-500 h-12 w-12" />; // Default for TXT, MD, MDX
   };
 

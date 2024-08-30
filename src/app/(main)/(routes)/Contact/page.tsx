@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 // Convex helps make our backend
 // GitHub helps us code together, Visual Studio is a code editor, and Yarn is a package manager which helps us download extensions
@@ -7,16 +7,18 @@
 // page.tsx in the outer most under app is our main page
 // If start with _ in the app, then it understands that it is not a page
 
-import { useState } from 'react'; // Used to store and track data
+import { useState } from "react";
+
+ // Used to store and track data
 
 
 const Contact = () => { // Creating a contact component
   const [formData, setFormData] = useState({ // formData stores data and setFormData is used to update data
     // Starting values are empty
-    name: '', 
-    email: '',
-    subject: '',
-    message: '',
+    name: "", 
+    email: "",
+    subject: "",
+    message: "",
   });
 
   // Runs when user types something in
@@ -30,7 +32,7 @@ const Contact = () => { // Creating a contact component
   // Runs when user clicks "Send Message" button
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevents page from refreshing when submitted
-    console.log('Form data:', formData);
+    console.log("Form data:", formData);
     // BACKEND LOOK INTO THIS - Handle form submission logic here
   };
 

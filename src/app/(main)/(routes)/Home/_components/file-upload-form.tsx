@@ -1,6 +1,18 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useConvexAuth, useQuery } from "convex/react";
+import { Upload } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { AddFilesModal } from "./add-files-modal";
+import { api } from "../../../../../../convex/_generated/api";
+import { addBot } from "@/actions/bot-actions";
 import { Button } from "@/components/ui/button";
+import { DialogClose } from "@/components/ui/dialog";
 import {
   Form,
   FormField,
@@ -18,18 +30,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { embeddingModels, llmModels } from "@/consts/constants";
-import { Upload } from "lucide-react";
-import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { AddFilesModal } from "./add-files-modal";
-import { useConvexAuth, useQuery } from "convex/react";
-import { api } from "../../../../../../convex/_generated/api";
-import { toast } from "sonner";
 import { uploadFilesToS3 } from "@/lib/storage";
-import { addBot } from "@/actions/bot-actions";
-import { DialogClose } from "@/components/ui/dialog";
+
+
+
 
 const fileUploadFormSchema = z.object({
   name: z.string({
@@ -68,10 +72,11 @@ export default function FileUploadForm() {
   });
 
   async function onSubmit(data: FileUploadFormValues) {
-    if (isUserLoading) return;
+    if (isUserLoading) { return; }
 
     if (uploadedFiles.length < 2) {
       toast.error("Please upload at least 2 files");
+
       return;
     }
 
@@ -79,6 +84,7 @@ export default function FileUploadForm() {
 
     if (!uploadImageResult.success || !uploadImageResult.result) {
       toast.error("Failed to upload files");
+
       return;
     }
 
@@ -125,7 +131,7 @@ export default function FileUploadForm() {
                     <SelectValue placeholder="Select embedding" />
                   </SelectTrigger>
                   <SelectContent>
-                    {embeddingModels.map((embed) => (
+                    {embeddingModels.map(embed => (
                       <SelectItem key={embed} value={embed}>
                         {embed}
                       </SelectItem>
@@ -153,7 +159,7 @@ export default function FileUploadForm() {
                     <SelectValue placeholder="Select LLM model" />
                   </SelectTrigger>
                   <SelectContent>
-                    {llmModels.map((model) => (
+                    {llmModels.map(model => (
                       <SelectItem key={model} value={model}>
                         {model}
                       </SelectItem>

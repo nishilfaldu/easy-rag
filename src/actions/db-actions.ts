@@ -1,7 +1,11 @@
 "use server";
-import { Pool } from "pg";
 import fs from "fs";
+
 import mysql from "mysql2/promise";
+import { Pool } from "pg";
+
+
+
 
 export async function getPostgresqlTableNames(
   databaseUrl = process.env.SAMPLE_DATABASE_URL
@@ -23,9 +27,10 @@ export async function getPostgresqlTableNames(
       WHERE table_schema = 'public';
     `);
 
-    return response.rows.map((row) => row.table_name);
+    return response.rows.map(row => row.table_name);
   } catch (error) {
     console.error("Error fetching table names:", error);
+
     return [];
   } finally {
     client.release(); // client is released back to the pool
@@ -56,12 +61,14 @@ export async function getPostgresqlTablesWithColumns(databaseUrl: string) {
         acc[row.table_name] = [];
       }
       acc[row.table_name].push(row.column_name);
+
       return acc;
     }, {});
 
     return tablesWithColumns;
   } catch (error) {
     console.error("Error fetching tables and columns:", error);
+
     return {};
   } finally {
     client.release(); // Ensure the client is released back to the pool
@@ -87,12 +94,14 @@ export async function getMysqlTablesWithColumns(databaseUrl: string) {
         acc[row.table_name] = [];
       }
       acc[row.table_name].push(row.column_name);
+
       return acc;
     }, {});
 
     return tablesWithColumns;
   } catch (error) {
     console.error("Error fetching tables and columns:", error);
+
     return {};
   } finally {
     await connection.end(); // Ensure the connection is closed

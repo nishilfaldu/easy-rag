@@ -1,6 +1,11 @@
 "use client";
 
-import { Dispatch, SetStateAction, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
+import type { UseFormReturn } from "react-hook-form";
+import { toast } from "sonner";
+
+import type { DbConnectFormValues } from "./db-connect-form";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -11,7 +16,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   FormField,
   FormItem,
@@ -19,9 +23,11 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { UseFormReturn } from "react-hook-form";
-import { DbConnectFormValues } from "./db-connect-form";
-import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+
+
+
 
 interface DbColumnsModalProps {
   form: UseFormReturn<DbConnectFormValues, any, undefined>;
@@ -45,7 +51,7 @@ export default function DbColumnsModal({
     form.setValue(
       "selectedColumns",
       currentColumns.includes(column)
-        ? currentColumns.filter((col) => col !== column)
+        ? currentColumns.filter(col => col !== column)
         : [...currentColumns, column]
     );
   };
@@ -77,7 +83,7 @@ export default function DbColumnsModal({
                 <div key={tableName}>
                   <h4 className="text-md font-bold mb-2">{tableName}</h4>
                   <div className="space-y-2">
-                    {columns.map((column) => (
+                    {columns.map(column => (
                       <FormField
                         key={column}
                         control={form.control}

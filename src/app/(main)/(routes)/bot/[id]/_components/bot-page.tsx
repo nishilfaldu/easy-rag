@@ -1,9 +1,13 @@
 "use client";
 
 import { useConvexAuth, useQuery } from "convex/react";
-import { Id } from "../../../../../../../convex/_generated/dataModel";
-import { api } from "../../../../../../../convex/_generated/api";
+
 import BotDetailsPage from "./bot-details";
+import { api } from "../../../../../../../convex/_generated/api";
+import type { Id } from "../../../../../../../convex/_generated/dataModel";
+
+
+
 
 interface BotDetailsProps {
   id: Id<"bots">;
