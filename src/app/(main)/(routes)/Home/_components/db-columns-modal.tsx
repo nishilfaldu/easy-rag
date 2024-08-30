@@ -25,10 +25,6 @@ import {
 } from "@/components/ui/form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-
-
-
-
 interface DbColumnsModalProps {
   form: UseFormReturn<DbConnectFormValues, any, undefined>;
   getTablesWithColumnNames: () => Promise<void>;
@@ -51,7 +47,7 @@ export default function DbColumnsModal({
     form.setValue(
       "selectedColumns",
       currentColumns.includes(column)
-        ? currentColumns.filter(col => col !== column)
+        ? currentColumns.filter((col) => col !== column)
         : [...currentColumns, column]
     );
   };
@@ -83,7 +79,7 @@ export default function DbColumnsModal({
                 <div key={tableName}>
                   <h4 className="text-md font-bold mb-2">{tableName}</h4>
                   <div className="space-y-2">
-                    {columns.map(column => (
+                    {columns.map((column) => (
                       <FormField
                         key={column}
                         control={form.control}

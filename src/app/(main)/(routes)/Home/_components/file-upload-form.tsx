@@ -32,9 +32,6 @@ import {
 import { embeddingModels, llmModels } from "@/consts/constants";
 import { uploadFilesToS3 } from "@/lib/storage";
 
-
-
-
 const fileUploadFormSchema = z.object({
   name: z.string({
     required_error: "Please enter a name",
@@ -72,7 +69,9 @@ export default function FileUploadForm() {
   });
 
   async function onSubmit(data: FileUploadFormValues) {
-    if (isUserLoading) { return; }
+    if (isUserLoading) {
+      return;
+    }
 
     if (uploadedFiles.length < 2) {
       toast.error("Please upload at least 2 files");
@@ -131,7 +130,7 @@ export default function FileUploadForm() {
                     <SelectValue placeholder="Select embedding" />
                   </SelectTrigger>
                   <SelectContent>
-                    {embeddingModels.map(embed => (
+                    {embeddingModels.map((embed) => (
                       <SelectItem key={embed} value={embed}>
                         {embed}
                       </SelectItem>
@@ -159,7 +158,7 @@ export default function FileUploadForm() {
                     <SelectValue placeholder="Select LLM model" />
                   </SelectTrigger>
                   <SelectContent>
-                    {llmModels.map(model => (
+                    {llmModels.map((model) => (
                       <SelectItem key={model} value={model}>
                         {model}
                       </SelectItem>

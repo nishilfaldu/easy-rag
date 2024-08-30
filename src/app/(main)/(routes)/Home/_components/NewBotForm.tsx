@@ -16,9 +16,6 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-
-
-
 export default function NewBotForm() {
   const [isOpen, setIsOpen] = useState(false);
 

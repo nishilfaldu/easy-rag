@@ -32,8 +32,6 @@ import {
 } from "@/components/ui/select";
 import { databaseTypes, embeddingModels, llmModels } from "@/consts/constants";
 
-
-
 // Define the schema with Zod
 const dbConnectFormSchema = z.object({
   name: z
@@ -90,7 +88,7 @@ export default function DbConnectForm() {
       ([tableName, columns]) => {
         return {
           tableName,
-          columns: columns.filter(column =>
+          columns: columns.filter((column) =>
             data.selectedColumns.includes(column)
           ),
         };
@@ -99,7 +97,7 @@ export default function DbConnectForm() {
 
     // filter out the object with no columns
     const filteredSelectedTables = selectedTables.filter(
-      table => table.columns.length > 0
+      (table) => table.columns.length > 0
     );
 
     const database = {
@@ -187,7 +185,7 @@ export default function DbConnectForm() {
                     <SelectValue placeholder="Select embedding" />
                   </SelectTrigger>
                   <SelectContent>
-                    {embeddingModels.map(embed => (
+                    {embeddingModels.map((embed) => (
                       <SelectItem key={embed} value={embed}>
                         {embed}
                       </SelectItem>
@@ -216,7 +214,7 @@ export default function DbConnectForm() {
                     <SelectValue placeholder="Select LLM model" />
                   </SelectTrigger>
                   <SelectContent>
-                    {llmModels.map(model => (
+                    {llmModels.map((model) => (
                       <SelectItem key={model} value={model}>
                         {model}
                       </SelectItem>
@@ -260,7 +258,7 @@ export default function DbConnectForm() {
                     <SelectValue placeholder="Select database type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {databaseTypes.map(type => (
+                    {databaseTypes.map((type) => (
                       <SelectItem key={type} value={type}>
                         {type}
                       </SelectItem>
