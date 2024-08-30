@@ -70,7 +70,10 @@ export default function NavBar() {
           </SheetTrigger>
           <SheetContent side="right">
             <nav className="flex flex-col gap-4">
-              <Link className="text-sm font-medium hover:underline" href="/">
+              <Link
+                className="text-sm font-medium hover:underline"
+                href="/home"
+              >
                 Home
               </Link>
               <Link
