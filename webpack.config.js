@@ -7,7 +7,7 @@ module.exports = {
   entry: "./src/sdk/chatbot.tsx",
   output: {
     filename: "chatbot-sdk.js",
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "public/js"),
     library: "Chatbot", // Expose the component globally
     libraryTarget: "umd",
     libraryExport: "default",
