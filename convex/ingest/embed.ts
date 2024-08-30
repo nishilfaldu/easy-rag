@@ -30,6 +30,7 @@ export async function embedTexts(
     const { data } = await openai.embeddings.create({
       input: texts,
       model: EMBEDDINGS_MODEL,
+      dimensions: 768,
     });
     return data.map(({ embedding }) => embedding);
   } else if (
