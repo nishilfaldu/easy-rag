@@ -1,5 +1,6 @@
 // webpack.config.js
 const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
   mode: "development",
@@ -32,6 +33,12 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new webpack.IgnorePlugin({
+      resourceRegExp: /@smithy\/util-retry/, // The module that is causing issues
+      contextRegExp: /NO_RETRY_INCREMENT/, // The specific export to ignore (if necessary)
+    }),
+  ],
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },

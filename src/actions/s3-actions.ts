@@ -9,18 +9,15 @@ import { v4 as uuidv4 } from "uuid";
 
 import type { Id } from "../../convex/_generated/dataModel";
 
-
-
-
 const s3Client = new S3Client({
-  region: process.env.AWS_BUCKET_REGION!,
+  region: process.env.AWS_BUCKET_REGION_DEVELOP!,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+    accessKeyId: process.env.AWS_ACCESS_KEY_DEVELOP!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY_DEVELOP!,
   },
 });
 
-const bucketName = process.env.AWS_BUCKET_NAME!;
+const bucketName = process.env.AWS_BUCKET_NAME_DEVELOP!;
 
 // Allowed file types: PDFs, DOC/DOCX, TXT, MD/MDX, CSV
 const ALLOWED_FILE_TYPES = [
@@ -64,7 +61,7 @@ export async function getSignedURLForUpload({
   }
 
   const putObjectCommand = new PutObjectCommand({
-    Bucket: process.env.AWS_BUCKET_NAME!,
+    Bucket: process.env.AWS_BUCKET_NAME_DEVELOP!,
     Key: uuidv4(),
     ContentType: fileType,
     ContentLength: fileSize,
