@@ -61,7 +61,7 @@ export const answer = internalAction({
                 "Answer the user question based on the provided documents " +
                 "or report that the question cannot be answered based on " +
                 "these documents. Keep the answer informative but brief, " +
-                "do not enumerate all possibilities.",
+                "do not enumerate all possibilities. You are strictly not allowed to answer any other questions.",
             },
             ...(relevantDocuments.map(({ text }) => ({
               role: "system",
