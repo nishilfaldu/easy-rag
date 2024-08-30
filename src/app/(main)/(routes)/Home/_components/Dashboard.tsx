@@ -87,7 +87,7 @@ export default function Dashboard() {
           imagePath="/hippo-empty-cart.png"
           message="You have no bots"
           linkMessage="Create a new bot by clicking Add Chatbot"
-          linkHref={{ pathname: "/Home" }}
+          linkHref={{ pathname: "/home" }}
         />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

@@ -16,9 +16,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-
-
-
 export default function NavBar() {
   const { openUserProfile } = useClerk();
 
@@ -33,13 +30,13 @@ export default function NavBar() {
         <span className="text-lg font-semibold">Easy Rag</span>
       </div>
       <nav className="hidden lg:flex lg:items-center lg:gap-4">
-        <Link className="text-sm font-medium hover:underline" href="/Home">
+        <Link className="text-sm font-medium hover:underline" href="/home">
           Home
         </Link>
-        <Link className="text-sm font-medium hover:underline" href="/About">
+        <Link className="text-sm font-medium hover:underline" href="/about">
           About
         </Link>
-        <Link className="text-sm font-medium hover:underline" href="/Contact">
+        <Link className="text-sm font-medium hover:underline" href="/contact">
           Contact Us
         </Link>
       </nav>
@@ -84,7 +81,7 @@ export default function NavBar() {
               </Link>
               <Link
                 className="text-sm font-medium hover:underline"
-                href="/Contact"
+                href="/contact"
               >
                 Contact
               </Link>
