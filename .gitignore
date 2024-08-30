@@ -37,3 +37,9 @@ next-env.d.ts
 
 # certificates
 certificates/*
+
+# dist bundle
+dist/.next
+dist/convex
+dist/src
+dist/tailwind.config.d.ts

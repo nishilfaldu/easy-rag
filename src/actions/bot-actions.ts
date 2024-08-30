@@ -8,7 +8,7 @@ import { api } from "../../convex/_generated/api";
 import { ConvexError } from "convex/values";
 
 export async function addBot(
-  bot: Omit<WithoutSystemFields<Doc<"bots">>, "progress" | "userId">,
+  bot: Omit<WithoutSystemFields<Doc<"bots">>, "progress" | "userId" | "isDb">,
   fileKeys: string[]
 ) {
   const token = await getAuthToken();
@@ -77,7 +77,7 @@ export async function deleteBot(botId: Id<"bots">) {
 }
 
 export async function addBotWithDb(
-  bot: Omit<WithoutSystemFields<Doc<"bots">>, "progress" | "userId">,
+  bot: Omit<WithoutSystemFields<Doc<"bots">>, "progress" | "userId" | "isDb">,
   database: Omit<WithoutSystemFields<Doc<"database">>, "botId">
 ) {
   const token = await getAuthToken();
