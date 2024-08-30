@@ -48,8 +48,9 @@ export const answer = internalAction({
     try {
       if (COMPLETION_MODEL.includes("gpt")) {
         const openai = new OpenAI({
-          organization: process.env.OPENAI_ORGANIZATION,
-          project: process.env.OPENAI_PROJECT_ID,
+          // organization: process.env.OPENAI_ORGANIZATION,
+          // project: process.env.OPENAI_PROJECT_ID,
+          apiKey: process.env.OPENAI_API_KEY,
         });
         const stream = await openai.chat.completions.create({
           model: COMPLETION_MODEL,
