@@ -1,11 +1,15 @@
+"use client";
+import { SignUpButton, SignInButton, SignIn, UserButton } from "@clerk/nextjs";
+import { useConvexAuth } from "convex/react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { useTypewriter, Cursor } from "react-simple-typewriter";
-import BackgroundCircles from "../_components/BackgroundCircles";
-import Image from "next/image";
-import { motion } from "framer-motion";
-import logo from "../_images/logo.png";
-import { SignUpButton, SignInButton } from "@clerk/nextjs";
 
+import BackgroundCircles from "./BackgroundCircles";
+import logo from "../../../public/_images/logo.png";
+import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   const [text] = useTypewriter({
@@ -20,6 +24,8 @@ const Hero = () => {
     delaySpeed: 2000,
     typeSpeed: 100,
   });
+
+  const { isAuthenticated, isLoading } = useConvexAuth();
 
   return (
     <div className="h-screen bg-black flex flex-col space-y-8 items-center justify-center text-center overflow-hidden">
@@ -47,7 +53,9 @@ const Hero = () => {
           height={400}
           priority={true}
           alt="Logo"
-          className={`relative rounded-full h-40 w-40 mx-auto object-cover z-20 border-4`}
+          className={
+            "relative rounded-full h-40 w-40 mx-auto object-cover z-20 border-4"
+          }
         />
         <h2 className="text-sm uppercase text-gray-500 pb-2 tracking-[15px] z-20 cursor-default ">
           EASY RAG
@@ -60,12 +68,30 @@ const Hero = () => {
             </span>
           </h1>
           <div className="pt-5">
-            <button className="heroButton">
-              <SignInButton mode="modal">Sign In</SignInButton>
+            {!isAuthenticated && !isLoading && (
+              <>
+                <SignInButton mode="modal">
+                  <button className="heroButton">Sign In</button>
+                </SignInButton>
+                <SignInButton mode="modal">
+                  <button className="heroButton">Sign Up</button>
+                </SignInButton>
+              </>
+            )}
+
+            {isAuthenticated && !isLoading && (
+              <>
+                <Link href="/home" className="heroButton">
+                  Dashboard
+                </Link>
+              </>
+            )}
+            {/* <button className="heroButton">
+              <SignInButton mode="modal" >Sign In</SignInButton>
             </button>
             <button className="heroButton">
-              <SignUpButton mode="modal">Sign Up</SignUpButton>
-            </button>
+                <SignUpButton mode="modal" >Sign Up</SignUpButton>
+            </button> */}
           </div>
         </div>
       </motion.div>

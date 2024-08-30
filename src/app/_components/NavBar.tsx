@@ -1,48 +1,43 @@
-import Link from "next/link"
-import { Menu, User } from "lucide-react"
-import Image from "next/image"
+"use client";
 
-import { Button } from "@/components/ui/button"
+import { SignOutButton, useClerk } from "@clerk/nextjs";
+import { UserProfile } from "@clerk/nextjs";
+import { Menu, User } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+
+import Logo from "../../../public/_images/logo.png";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import Logo from "../_images/logo.png";
+} from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export default function NavBar() {
+  const { openUserProfile } = useClerk();
+
   return (
     <header className="flex h-16 items-center justify-between border-b px-4 lg:px-8">
       <div className="flex items-center gap-2">
         <Image
-          className=" h-6 w-6 text-primary"
+          className="relative rounded-full h-10 w-10 mx-auto object-cover z-20 border-4"
           src={Logo}
           alt="logo"
-        >
-
-        </Image>
+        ></Image>
         <span className="text-lg font-semibold">Easy Rag</span>
       </div>
       <nav className="hidden lg:flex lg:items-center lg:gap-4">
-        <Link
-          className="text-sm font-medium hover:underline"
-          href="/"
-        >
+        <Link className="text-sm font-medium hover:underline" href="/home">
           Home
         </Link>
-        <Link
-          className="text-sm font-medium hover:underline"
-          href="/about"
-        >
+        <Link className="text-sm font-medium hover:underline" href="/about">
           About
         </Link>
-        <Link
-          className="text-sm font-medium hover:underline"
-          href="/contact"
-        >
-          Contact
+        <Link className="text-sm font-medium hover:underline" href="/contact">
+          Contact Us
         </Link>
       </nav>
       <div className="flex items-center gap-4">
@@ -54,9 +49,16 @@ export default function NavBar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                openUserProfile();
+              }}
+            >
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <SignOutButton>Sign Out</SignOutButton>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         <Sheet>
@@ -70,7 +72,7 @@ export default function NavBar() {
             <nav className="flex flex-col gap-4">
               <Link
                 className="text-sm font-medium hover:underline"
-                href="/"
+                href="/home"
               >
                 Home
               </Link>
@@ -91,5 +93,5 @@ export default function NavBar() {
         </Sheet>
       </div>
     </header>
-  )
+  );
 }

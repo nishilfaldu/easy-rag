@@ -1,6 +1,8 @@
 "use client";
-import { SignInButton, SignUpButton } from "@clerk/clerk-react";
-import Hero from "./Hero";
+import Hero from "@/app/_components/Hero";
+
+
+
 
 export default function Landing() {
   return (

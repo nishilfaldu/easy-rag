@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chatbot Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/react/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom/umd/react-dom.development.js"></script>
+    <script src="./dist/chatbot-sdk.js"></script>
+    <!-- Path to your bundled SDK -->
+  </head>
+  <body>
+    <h1>Chatbot Test Page</h1>
+    <div id="my-chatbot"></div>
+    <script>
+      console.log("Chatbot:", window.Chatbot);
+      // Use createRoot instead of render
+      const root = ReactDOM.createRoot(document.getElementById("my-chatbot"));
+      root.render(
+        React.createElement(window.Chatbot, {
+          botId: "your-bot-id", // Replace with a real bot ID
+        })
+      );
+    </script>
+  </body>
+</html>
