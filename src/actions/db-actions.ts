@@ -4,9 +4,6 @@ import fs from "fs";
 import mysql from "mysql2/promise";
 import { Pool } from "pg";
 
-
-
-
 export async function getPostgresqlTableNames(
   databaseUrl = process.env.SAMPLE_DATABASE_URL
 ) {
@@ -27,7 +24,7 @@ export async function getPostgresqlTableNames(
       WHERE table_schema = 'public';
     `);
 
-    return response.rows.map(row => row.table_name);
+    return response.rows.map((row) => row.table_name);
   } catch (error) {
     console.error("Error fetching table names:", error);
 
