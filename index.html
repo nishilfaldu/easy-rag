@@ -2,25 +2,61 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chatbot Test</title>
-    <script src="https://cdn.jsdelivr.net/npm/react/umd/react.development.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-dom/umd/react-dom.development.js"></script>
-    <script src="./dist/chatbot-sdk.js"></script>
-    <!-- Path to your bundled SDK -->
+    <title>Clerk JavaScript Starter with Chatbot</title>
   </head>
+
   <body>
-    <h1>Chatbot Test Page</h1>
-    <div id="my-chatbot"></div>
+    <div id="app"></div>
+
+    <!-- Clerk Script Tag -->
+    <script
+      async
+      crossorigin="anonymous"
+      data-clerk-publishable-key="process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"
+      onload="window.Clerk.load()"
+      src="https://bold-dolphin-3.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+      type="text/javascript"
+    ></script>
+
     <script>
-      console.log("Chatbot:", window.Chatbot);
-      // Use createRoot instead of render
-      const root = ReactDOM.createRoot(document.getElementById("my-chatbot"));
-      root.render(
-        React.createElement(window.Chatbot, {
-          botId: "your-bot-id", // Replace with a real bot ID
-        })
-      );
+      window.addEventListener("load", async function () {
+        await Clerk.load();
+
+        if (Clerk.user) {
+          document.getElementById("app").innerHTML = `
+            <div id="user-button"></div>
+            <div id="chatbot-container" style="width: 100%; height: 500px; border: none; border-radius: 8px;"></div>
+          `;
+
+          const userButtonDiv = document.getElementById("user-button");
+          Clerk.mountUserButton(userButtonDiv);
+
+          // Chatbot integration
+          const botId = "js71qsag15hdeg8v2h859kwebd6zv35f";
+          const iframe = document.createElement("iframe");
+          iframe.src = `https://easy-rag.vercel.app/bot/${botId}`;
+          iframe.style.width = "100%";
+          iframe.style.height = "100%";
+          iframe.style.border = "none";
+          iframe.style.borderRadius = "8px";
+
+          const chatbotContainer = document.getElementById("chatbot-container");
+          if (chatbotContainer) {
+            chatbotContainer.appendChild(iframe);
+          } else {
+            console.error("Container with ID 'chatbot-container' not found.");
+          }
+        } else {
+          document.getElementById("app").innerHTML = `
+            <div id="sign-in"></div>
+          `;
+
+          const signInDiv = document.getElementById("sign-in");
+          Clerk.mountSignIn(signInDiv);
+        }
+      });
     </script>
   </body>
 </html>
