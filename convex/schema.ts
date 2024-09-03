@@ -71,7 +71,9 @@ export default defineSchema({
     // The parsed document content
     botId: v.id("bots"),
     text: v.string(),
-  }).index("byUrl", ["url"]),
+  })
+    .index("byUrl", ["url"])
+    .index("byBotId", ["botId"]),
 
   database: defineTable({
     url: v.string(),

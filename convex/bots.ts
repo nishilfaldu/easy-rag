@@ -77,6 +77,21 @@ export const getBotById = query({
       throw new ConvexError("The bot you're trying to get doesn't exist.");
     }
 
+    if (!bot.isDb) {
+      // get documents
+      const documents = await getManyFrom(
+        db,
+        "documents",
+        "byBotId",
+        botId,
+        "botId"
+      );
+      return {
+        ...bot,
+        documents,
+      };
+    }
+
     return bot;
   },
 });
