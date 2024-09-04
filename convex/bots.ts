@@ -92,7 +92,10 @@ export const getBotById = query({
       };
     }
 
-    return bot;
+    return {
+      ...bot,
+      documents: [],
+    };
   },
 });
 
