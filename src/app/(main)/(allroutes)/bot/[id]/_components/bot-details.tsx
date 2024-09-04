@@ -11,8 +11,9 @@ interface BotDetailsPageProps {
   bot: FunctionReturnType<typeof api.bots.getBotById> | undefined;
 }
 
+
 export default function BotDetailsPage({ bot }: BotDetailsPageProps) {
-  console.log(bot);
+  
   const [leftWidth, setLeftWidth] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -146,9 +147,10 @@ export default function BotDetailsPage({ bot }: BotDetailsPageProps) {
         style={{ width: `${leftWidth}%` }}
         className="p-6 border-r border-gray-200 dark:border-gray-700 overflow-auto"
       >
+        <div className="flex">
         <h2 className="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#4c5cfc] to-[#b880fc]">
           Chatbot Details
-        </h2>
+        </h2></div>
         <div className="space-y-6">
           <div className="flex items-center space-x-3 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
             <Bot className="w-8 h-8 text-purple-500" />
@@ -185,8 +187,17 @@ export default function BotDetailsPage({ bot }: BotDetailsPageProps) {
                 <span className="font-semibold text-gray-700 dark:text-gray-300">
                   Files Uploaded:
                 </span>
-                <span className="ml-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full text-sm">
-                  chatbot_data.json
+                <span>
+                {bot?.documents && bot.documents.length > 0 ? (bot.documents.map((doc) => (
+                  <div key={doc._id} className="mb-1">
+                    <a href={doc.url} className=" bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full text-sm underline" target="_blank" rel="noopener noreferrer">
+                      {doc._id}
+                    </a>
+                  </div>
+                    ))
+                  ) : (
+                    "No documents available"
+                  )}
                 </span>
               </div>
             </div>

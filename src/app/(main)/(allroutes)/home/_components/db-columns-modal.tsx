@@ -52,6 +52,14 @@ export default function DbColumnsModal({
     );
   };
 
+  const handleSave = () => {
+    form.handleSubmit((data) => {
+
+      toast.success("Columns selected successfully!");
+      setIsOpen(false); 
+    })();
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -65,7 +73,7 @@ export default function DbColumnsModal({
           Connect Database
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[450px]">
         <DialogHeader>
           <DialogTitle>Select Database Columns</DialogTitle>
           <DialogDescription>
@@ -113,6 +121,12 @@ export default function DbColumnsModal({
               ))}
             </div>
           </ScrollArea>
+        </div>
+        
+        <div className="flex justify-center">
+          <Button onClick={handleSave} className="bg-black text-white w-full">
+            Save
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

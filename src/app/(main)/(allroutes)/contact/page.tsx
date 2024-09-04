@@ -144,7 +144,7 @@ const Contact = () => {
           {/* // Button submits when clicked; blue button that changes color when hovered over */}
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-purple-500 to-[#4c5cfc] hover:from-purple-600 hover:to-pink-600 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+            className="w-full bg-gradient-to-r from-purple-500 to-[#4c5cfc] hover:from-purple-600 hover:to-pink-600 text-white py-2 px-4 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
           >
             Send Message
           </button>
