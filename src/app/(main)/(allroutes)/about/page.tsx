@@ -147,6 +147,24 @@ export default function AboutUs() {
               </span>
             </li>
             <li className="flex items-center">
+              <span className="mr-2 text-base">🔢 </span>
+              <span>
+                Create and Optimize Database Column Embeddings:Develop and store
+                embeddings for database columns, ensuring compatibility with
+                databases beyond PostgreSQL, to improve data retrieval and
+                processing.
+              </span>
+            </li>
+            <li className="flex items-center">
+              <span className="mr-2 text-base">📝</span>
+              <span>
+                Automate Website Scraping for Chatbot Integration: Streamline
+                the process where clients provide a URL, enabling us to scrape
+                the website content and integrate a customized chatbot
+                seamlessly.
+              </span>
+            </li>
+            <li className="flex items-center">
               <span className="mr-2 text-base">🚀</span>
               <span>
                 Advanced Tech Stack: Utilize top-tier embedding models and LLMs
