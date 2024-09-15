@@ -1,7 +1,6 @@
 "use client";
 
 import type { Dispatch, SetStateAction } from "react";
-import { useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -54,9 +53,8 @@ export default function DbColumnsModal({
 
   const handleSave = () => {
     form.handleSubmit((data) => {
-
       toast.success("Columns selected successfully!");
-      setIsOpen(false); 
+      setIsOpen(false);
     })();
   };
 
@@ -122,7 +120,7 @@ export default function DbColumnsModal({
             </div>
           </ScrollArea>
         </div>
-        
+
         <div className="flex justify-center">
           <Button onClick={handleSave} className="bg-black text-white w-full">
             Save

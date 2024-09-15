@@ -43,3 +43,9 @@ dist/.next
 dist/convex
 dist/src
 dist/tailwind.config.d.ts
+
+# sst
+.sst
+
+# open-next
+.open-next

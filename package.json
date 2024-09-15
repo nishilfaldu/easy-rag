@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "next dev",
+    "lint": "next lint",
+    "start": "next start"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.27.1",
@@ -63,6 +63,7 @@
     "react-syntax-highlighter": "^15.5.0",
     "react-toastify": "^10.0.5",
     "sonner": "^1.5.0",
+    "sst": "3.1.10",
     "svix": "^1.30.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
