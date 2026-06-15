@@ -1,5 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./functions";
+import { mutation, publicQuery, query } from "./functions";
 import { getManyFrom } from "convex-helpers/server/relationships";
 import { completionModelsField, embeddingModelsField } from "./schema";
 import { internal } from "./_generated/api";
@@ -68,7 +68,8 @@ export const remove = mutation({
   },
 });
 
-export const getBotById = query({
+// Public: powers the embeddable widget, so it must be callable without a session.
+export const getBotById = publicQuery({
   args: { botId: v.id("bots") },
   handler: async ({ db }, { botId }) => {
     const bot = await db.get(botId);

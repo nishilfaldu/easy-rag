@@ -97,7 +97,7 @@ export default function BotDetailsPage({ bot }: BotDetailsPageProps) {
       }
 
       iframe {
-        width: 200%;
+        width: 100%;
         height: 100%;
         border: none;
       }
@@ -116,7 +116,7 @@ export default function BotDetailsPage({ bot }: BotDetailsPageProps) {
     <script>
       window.addEventListener("load", function () {
         const iframe = document.createElement("iframe");
-        iframe.src = "https://easy-rag-no-auth.vercel.app/bot-only/${bot?._id}";
+        iframe.src = "https://easy-rag.vercel.app/bot-only/${bot?._id}";
 
         const chatbotContainer = document.getElementById("chatbot-container");
         if (chatbotContainer) {

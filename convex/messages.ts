@@ -1,9 +1,10 @@
 import { v } from "convex/values";
-import { mutation, query } from "./functions";
+import { mutation, publicMutation, publicQuery } from "./functions";
 import { getManyFrom } from "convex-helpers/server/relationships";
 import { internal } from "./_generated/api";
 
-export const list = query({
+// Public: the embedded widget reads its conversation without a session.
+export const list = publicQuery({
   args: {
     botId: v.id("bots"),
   },
@@ -20,7 +21,8 @@ export const list = query({
   },
 });
 
-export const send = mutation({
+// Public: visitors on a customer's site post questions to the embedded widget.
+export const send = publicMutation({
   args: {
     botId: v.id("bots"),
     isViewer: v.boolean(),

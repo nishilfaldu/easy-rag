@@ -68,3 +68,19 @@ const mutationAuthCheck = customCtx(async (ctx: MutationCtx) => {
 export const query = customQuery(queryRaw, queryAuthCheck);
 export const mutation = customMutation(mutationRaw, mutationAuthCheck);
 // export const action = customAction(actionRaw, authCheck);
+
+// Public (unauthenticated) functions.
+//
+// The embeddable chatbot runs inside an iframe on someone else's website, where
+// the visitor has no EasyRAG/Clerk session. The handful of functions that power
+// that widget — reading a bot by id and reading/sending its messages — therefore
+// can't go through the auth check above. These wrappers leave the rest of the
+// platform locked down while exposing only that narrow surface.
+export const publicQuery = customQuery(
+  queryRaw,
+  customCtx(async () => ({}))
+);
+export const publicMutation = customMutation(
+  mutationRaw,
+  customCtx(async () => ({}))
+);
